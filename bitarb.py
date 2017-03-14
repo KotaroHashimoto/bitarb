@@ -1,14 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-
-from urllib.request import urlopen
 from json import load
 from datetime import datetime
 from threading import Thread
 from time import sleep
 from oandapy import API
+from sys import version_info, exit
 
-from tkinter import *
+if version_info.major == 2 and version_info.minor == 7:
+    from urllib import urlopen
+    from Tkinter import *
+elif version_info.major == 3 and version_info.minor == 6:
+    from urllib.request import urlopen
+    from tkinter import *
+else:
+    print('Please install python2.7.x or python3.6.x')
+    exit(1)
 
 
 class Window(Thread):
@@ -145,8 +152,9 @@ if __name__ == '__main__':
         Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'buy', 'sell'), \
         Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
-        #Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_proce', 'market_ask', 'market_bid'), \
+        Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_proce', 'market_ask', 'market_bid'), \
         USDExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
+        USDExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
         USDExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
         OANDA(window.root, 'USD_JPY'), \
         OANDA(window.root, 'EUR_JPY'), \
