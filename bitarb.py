@@ -148,7 +148,7 @@ def updatePrice():
         e.getPrice()
 
     window.update()    
-    window.root.after(5000, updatePrice)
+    window.root.after(1000, updatePrice)
 
 updatePrice()
 window.root.mainloop()
