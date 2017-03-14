@@ -97,7 +97,7 @@ class Exchange(Thread):
     def run(self):
 
         while True:
-            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Magic Browser'})))
+            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
             self.ask = int(data[self.sask])
             self.bid = int(data[self.sbid])
