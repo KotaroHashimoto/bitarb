@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 
 from urllib.request import urlopen
@@ -6,7 +6,7 @@ from json import load
 from datetime import datetime
 from threading import Thread
 from time import sleep
-import oandapy
+from oandapy import API
 
 from tkinter import *
 
@@ -51,7 +51,7 @@ class OANDA(Thread):
         self.label.pack()
         self.symbol = symbol
 
-        self.oanda = oandapy.API(environment='practice', access_token='f80296b600eddebbb0402eeabce34139-55d481314b19c1127978ecd05c9dca65')
+        self.oanda = API(environment='practice', access_token='f80296b600eddebbb0402eeabce34139-55d481314b19c1127978ecd05c9dca65')
 
     def run(self):
 
