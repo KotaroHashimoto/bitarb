@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from json import load
 from datetime import datetime
@@ -71,7 +71,7 @@ class OANDA(Thread):
             OANDA.PRICE[self.symbol] = up
             ask = str(int(1000 * prices[0].get('ask')))
             bid = str(int(1000 * prices[0].get('bid')))
-            self.lstr.set(self.symbol.replace('_', '/') + '\t\t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
+            self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
 
 
 class Exchange(Thread):
