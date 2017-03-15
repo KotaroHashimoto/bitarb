@@ -43,9 +43,6 @@ class Window(Thread):
         self.root.bind('<Right>', self.expand)
         self.root.bind('<Down>', self.shrink)
         self.root.bind('<Left>', self.shrink)
-        
-        self.x = 0
-        self.y = 0
 
     def run(self):
     
