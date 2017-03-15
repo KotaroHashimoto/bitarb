@@ -56,7 +56,7 @@ class Window(Thread):
 
 class OANDA(Thread):
 
-    PRICE = {'USD_JPY':0, 'EUR_JPY':0, 'GBP_JPY':0}
+    PRICE = {'USD_JPY':0, 'EUR_JPY':0, 'GBP_JPY':0, 'CNY_JPY':0, 'USD_CNY':0}
     
     def __init__(self, root, symbol):
         Thread.__init__(self)
@@ -80,9 +80,19 @@ class OANDA(Thread):
             up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
             self.label.configure(fg = ('green' if OANDA.PRICE[self.symbol] < up else ('red' if OANDA.PRICE[self.symbol] > up else 'black')))
             OANDA.PRICE[self.symbol] = up
-            ask = str(int(1000 * prices[0].get('ask')))
-            bid = str(int(1000 * prices[0].get('bid')))
-            self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
+            
+            if 'CNY_JPY' == self.symbol:
+                ask = str(int(1000 * prices[0].get('ask')))
+                bid = str(int(1000 * prices[0].get('bid')))
+                self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
+            elif 'USD_CNY' == self.symbol:
+                ask = str(int(10000 * prices[0].get('ask')))
+                bid = str(int(10000 * prices[0].get('bid')))
+                self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
+            else:
+                ask = str(int(1000 * prices[0].get('ask')))
+                bid = str(int(1000 * prices[0].get('bid')))
+                self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
 
 
 class Exchange(Thread):
@@ -176,6 +186,8 @@ if __name__ == '__main__':
         OANDA(window.root, 'USD_JPY'), \
         OANDA(window.root, 'EUR_JPY'), \
         OANDA(window.root, 'GBP_JPY'), \
+        OANDA(window.root, 'CNY_JPY'), \
+        OANDA(window.root, 'USD_CNY'), \
     )
 
     for e in exchangeList:
