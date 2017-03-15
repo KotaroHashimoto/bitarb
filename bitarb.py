@@ -58,7 +58,7 @@ class Window(Thread):
             widget.configure(font = (Window.FONT, Window.FSIZE))
 
     def onMouseWheel(self, mouseEvent):
-        self.update((1 if 0 < mouseEvent.delta else -1))
+        self.update(1 if 0 < mouseEvent.delta else -1)
 
     def expand(self, keyEvent):
         self.update(1)
