@@ -91,7 +91,7 @@ class OANDA(Thread):
             prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
             
             up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
-            self.label.configure(fg = ('green' if OANDA.PRICE[self.symbol] < up else ('red' if OANDA.PRICE[self.symbol] > up else 'black')))
+            self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
             OANDA.PRICE[self.symbol] = up
             
             if 'CNY_JPY' == self.symbol:
@@ -137,7 +137,7 @@ class Exchange(Thread):
             self.bid = int(data[self.sbid])
         
             up = int(data[self.last])
-            self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
+            self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
             self.p = up
         
             a = str(self.ask)
@@ -174,7 +174,7 @@ class ForExchange(Exchange):
             self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
             up = float(data[self.last]) * OANDA.PRICE[self.base]
 
-            self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
+            self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
             self.p = up
 
             a = str(int(round(self.ask)))
@@ -210,7 +210,7 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoin week', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
 #        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
-        ] + 
+        ] + \
         [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()], \
     )
 
