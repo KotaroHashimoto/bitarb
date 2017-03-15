@@ -22,6 +22,8 @@ else:
 class Window(Thread):
 
     PERIOD = 0.5
+    FONT = 'Arial'
+    FSIZE = 12
 
     def __init__(self, title):
         Thread.__init__(self)
@@ -31,16 +33,25 @@ class Window(Thread):
 
         self.str = StringVar()
         self.str.set('')
-        self.label = Label(self.root, textvariable = self.str)
+        self.label = Label(self.root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
         self.label.pack()
 
-        Label(text = 'Exchange' + (' '*8) + '\tLast\tAsk\tBid').pack()
+        Label(text = 'Exchange' + (' '*8) + '\tLast\tAsk\tBid', font = (Window.FONT, Window.FSIZE)).pack()
+        
+        self.root.bind('<MouseWheel>', self.onMouseWheel)
 
     def run(self):
     
         while True:
             self.str.set(datetime.now().strftime('%Y/%m/%d  %H:%M:%S'))
             sleep(Window.PERIOD)
+
+    def onMouseWheel(self, mouseEvent):
+    
+        Window.FSIZE = Window.FSIZE + (1 if 0 < mouseEvent.delta else -1)
+    
+        for widget in self.root.children.values():
+            widget.configure(font = (Window.FONT, Window.FSIZE))
 
 
 class OANDA(Thread):
@@ -55,7 +66,7 @@ class OANDA(Thread):
 
         self.lstr = StringVar()
         self.lstr.set('')
-        self.label = Label(root, textvariable = self.lstr)
+        self.label = Label(root, textvariable = self.lstr, font = (Window.FONT, Window.FSIZE))
         self.label.pack()
         self.symbol = symbol
 
@@ -87,7 +98,7 @@ class Exchange(Thread):
 
         self.str = StringVar()
         self.str.set('')
-        self.label = Label(root, textvariable = self.str)
+        self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
         self.label.pack()
 
         self.ask = 0
