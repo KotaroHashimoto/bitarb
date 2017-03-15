@@ -69,7 +69,7 @@ class Window(Thread):
 
 class OANDA(Thread):
 
-    PRICE = {'USD_JPY':0, 'EUR_JPY':0, 'GBP_JPY':0, 'CNY_JPY':0, 'USD_CNY':0}
+    PRICE = {'USD_JPY':1, 'EUR_JPY':1, 'GBP_JPY':1, 'CNY_JPY':1, 'USD_CNY':1}
     
     def __init__(self, root, symbol):
         Thread.__init__(self)
@@ -148,7 +148,7 @@ class Exchange(Thread):
             sleep(Window.PERIOD)
 
 
-class USDExchange(Exchange):
+class ForExchange(Exchange):
 
     def __init__(self, root, name, url, last, sask, sbid):    
         Exchange.__init__(self, root, name, url, last, sask, sbid)
@@ -162,11 +162,55 @@ class USDExchange(Exchange):
                 data = data['btc_usd']
             elif self.name == 'Poloniex':
                 data = data['USDT_BTC']
+            elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC':
+                data = data['ticker']
 
-            self.ask = float(data[self.sask]) * OANDA.PRICE['USD_JPY']
-            self.bid = float(data[self.sbid]) * OANDA.PRICE['USD_JPY']
+            if 'Houbi' == self.name:
+                self.ask = float(data[self.sask]) * OANDA.PRICE['CNY_JPY']
+                self.bid = float(data[self.sbid]) * OANDA.PRICE['CNY_JPY']
+                up = float(data[self.last]) * OANDA.PRICE['CNY_JPY']
+            else:
+                self.ask = float(data[self.sask]) * OANDA.PRICE['USD_JPY']
+                self.bid = float(data[self.sbid]) * OANDA.PRICE['USD_JPY']
+                up = float(data[self.last]) * OANDA.PRICE['USD_JPY']
         
-            up = float(data[self.last]) * OANDA.PRICE['USD_JPY']
+            self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
+            self.p = up
+
+            a = str(int(round(self.ask)))
+            b = str(int(round(self.bid)))
+            l = str(int(round(self.p)))
+
+            self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
+            sleep(Window.PERIOD)
+
+
+class ForExchange(Exchange):
+
+    def __init__(self, root, name, url, last, sask, sbid):    
+        Exchange.__init__(self, root, name, url, last, sask, sbid)
+        
+        if 'Houbi' == self.name or 'BTCC' == self.name:
+            self.base = 'CNY_JPY'
+        else:
+            self.base = 'USD_JPY'
+
+    def run(self):
+    
+        while True:
+            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+
+            if self.name == 'BTC-e':
+                data = data['btc_usd']
+            elif self.name == 'Poloniex':
+                data = data['USDT_BTC']
+            elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
+                data = data['ticker']
+
+            self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
+            self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
+            up = float(data[self.last]) * OANDA.PRICE[self.base]
+
             self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
             self.p = up
 
@@ -188,14 +232,20 @@ if __name__ == '__main__':
         window, \
         Exchange(window.root, 'bitFlyerFX', 'https://api.bitflyer.jp/v1/getticker?product_code=FX_BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
         Exchange(window.root, 'bitFlyer', 'https://api.bitflyer.jp/v1/getticker?product_code=BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
-        Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'buy', 'sell'), \
+        Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'sell', 'buy'), \
         Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
-        USDExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
-        USDExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
-        USDExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
-        USDExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
+        ForExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
+        ForExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
+        ForExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
+        ForExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
+        ForExchange(window.root, 'Houbi', 'http://api.huobi.com/staticmarket/ticker_btc_json.js', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'BTCC', 'https://pro-data.btcc.com/data/pro/ticker?symbol=XBTCNY', 'Last', 'AskPrice', 'BidPrice'), \
+        ForExchange(window.root, 'OKCoin', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
+#        ForExchange(window.root, 'OKCoin this wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
+#        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
         ] + 
         [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()], \
     )
