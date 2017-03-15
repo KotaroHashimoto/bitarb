@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
     window = Window('BTC/JPY Live Price')
 
-    exchangeList = ( \
+    exchangeList = tuple([ \
         window, \
         Exchange(window.root, 'bitFlyerFX', 'https://api.bitflyer.jp/v1/getticker?product_code=FX_BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
         Exchange(window.root, 'bitFlyer', 'https://api.bitflyer.jp/v1/getticker?product_code=BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
@@ -183,11 +183,8 @@ if __name__ == '__main__':
         USDExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
         USDExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
         USDExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
-        OANDA(window.root, 'USD_JPY'), \
-        OANDA(window.root, 'EUR_JPY'), \
-        OANDA(window.root, 'GBP_JPY'), \
-        OANDA(window.root, 'CNY_JPY'), \
-        OANDA(window.root, 'USD_CNY'), \
+        ] + 
+        [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()], \
     )
 
     for e in exchangeList:
