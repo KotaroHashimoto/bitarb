@@ -207,9 +207,9 @@ if __name__ == '__main__':
         ForExchange(window.root, 'BTCC', 'https://pro-data.btcc.com/data/pro/ticker?symbol=XBTCNY', 'Last', 'AskPrice', 'BidPrice'), \
         ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoinCOM', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
-        ForExchange(window.root, 'OKCoinCOM week', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'OKCoin week', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
 #        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
-        ForExchange(window.root, 'OKCoinCOM quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
         ] + 
         [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()], \
     )
