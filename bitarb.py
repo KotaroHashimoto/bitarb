@@ -152,43 +152,6 @@ class ForExchange(Exchange):
 
     def __init__(self, root, name, url, last, sask, sbid):    
         Exchange.__init__(self, root, name, url, last, sask, sbid)
-
-    def run(self):
-    
-        while True:
-            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
-
-            if self.name == 'BTC-e':
-                data = data['btc_usd']
-            elif self.name == 'Poloniex':
-                data = data['USDT_BTC']
-            elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC':
-                data = data['ticker']
-
-            if 'Houbi' == self.name:
-                self.ask = float(data[self.sask]) * OANDA.PRICE['CNY_JPY']
-                self.bid = float(data[self.sbid]) * OANDA.PRICE['CNY_JPY']
-                up = float(data[self.last]) * OANDA.PRICE['CNY_JPY']
-            else:
-                self.ask = float(data[self.sask]) * OANDA.PRICE['USD_JPY']
-                self.bid = float(data[self.sbid]) * OANDA.PRICE['USD_JPY']
-                up = float(data[self.last]) * OANDA.PRICE['USD_JPY']
-        
-            self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
-            self.p = up
-
-            a = str(int(round(self.ask)))
-            b = str(int(round(self.bid)))
-            l = str(int(round(self.p)))
-
-            self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
-            sleep(Window.PERIOD)
-
-
-class ForExchange(Exchange):
-
-    def __init__(self, root, name, url, last, sask, sbid):    
-        Exchange.__init__(self, root, name, url, last, sask, sbid)
         
         if 'Houbi' == self.name or 'BTCC' == self.name:
             self.base = 'CNY_JPY'
