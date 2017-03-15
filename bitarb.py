@@ -137,6 +137,8 @@ class USDExchange(Exchange):
 
             if self.name == 'BTC-e':
                 data = data['btc_usd']
+            elif self.name == 'Poloniex':
+                data = data['USDT_BTC']
 
             self.ask = float(data[self.sask]) * OANDA.PRICE['USD_JPY']
             self.bid = float(data[self.sbid]) * OANDA.PRICE['USD_JPY']
@@ -167,6 +169,7 @@ if __name__ == '__main__':
         Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
+        USDExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
         USDExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
         USDExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
         USDExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
