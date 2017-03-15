@@ -39,6 +39,13 @@ class Window(Thread):
         Label(text = 'Exchange' + (' '*8) + '\tLast\tAsk\tBid', font = (Window.FONT, Window.FSIZE)).pack()
         
         self.root.bind('<MouseWheel>', self.onMouseWheel)
+        self.root.bind('<Up>', self.expand)
+        self.root.bind('<Right>', self.expand)
+        self.root.bind('<Down>', self.shrink)
+        self.root.bind('<Left>', self.shrink)
+        
+        self.x = 0
+        self.y = 0
 
     def run(self):
     
@@ -46,12 +53,21 @@ class Window(Thread):
             self.str.set(datetime.now().strftime('%Y/%m/%d  %H:%M:%S'))
             sleep(Window.PERIOD)
 
-    def onMouseWheel(self, mouseEvent):
+    def update(self, delta):
     
-        Window.FSIZE = Window.FSIZE + (1 if 0 < mouseEvent.delta else -1)
+        Window.FSIZE = Window.FSIZE + delta
     
         for widget in self.root.children.values():
             widget.configure(font = (Window.FONT, Window.FSIZE))
+
+    def onMouseWheel(self, mouseEvent):
+        self.update((1 if 0 < mouseEvent.delta else -1))
+
+    def expand(self, keyEvent):
+        self.update(1)
+
+    def shrink(self, keyEvent):
+        self.update(-1)
 
 
 class OANDA(Thread):
