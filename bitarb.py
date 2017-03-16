@@ -114,7 +114,9 @@ class OANDA(Thread):
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
 
             except:
+                self.label.configure(fg = 'gray')
                 sleep(10)
+                self.label.configure(bg = 'black')
                 continue
 
 
@@ -159,7 +161,9 @@ class Exchange(Thread):
                 sleep(Window.PERIOD)
 
             except:
+                self.label.configure(fg = 'gray')
                 sleep(10)
+                self.label.configure(fg = 'black')
                 continue
 
 
@@ -201,7 +205,9 @@ class ForExchange(Exchange):
                 sleep(Window.PERIOD)
 
             except:
+                self.label.configure(fg = 'gray')
                 sleep(10)
+                self.label.configure(fg = 'black')
                 continue
 
 
@@ -227,7 +233,7 @@ class EthereumExchange(ForExchange):
                 self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
                 up = float(data[self.last]) * OANDA.PRICE[self.base]
 
-                self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
+                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
 
                 a = str(int(10.0 * self.ask))
@@ -238,7 +244,9 @@ class EthereumExchange(ForExchange):
                 sleep(Window.PERIOD)
 
             except:
+                self.label.configure(fg = 'gray')
                 sleep(10)
+                self.label.configure(fg = 'black')
                 continue
 
 
