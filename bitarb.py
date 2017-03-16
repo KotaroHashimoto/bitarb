@@ -47,8 +47,13 @@ class Window(Thread):
     def run(self):
     
         while True:
-            self.str.set(datetime.now().strftime('%Y/%m/%d  %H:%M:%S'))
-            sleep(Window.PERIOD)
+            try:
+                self.str.set(datetime.now().strftime('%Y/%m/%d  %H:%M:%S'))
+                sleep(Window.PERIOD)
+
+            except:
+                sleep(10)
+                continue
 
     def update(self, delta):
     
@@ -88,24 +93,29 @@ class OANDA(Thread):
     def run(self):
 
         while True:
-            prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
+            try:
+                prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
+
+                up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
+                self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
+                OANDA.PRICE[self.symbol] = up
             
-            up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
-            self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
-            OANDA.PRICE[self.symbol] = up
-            
-            if 'CNY_JPY' == self.symbol:
-                ask = str(int(1000 * prices[0].get('ask')))
-                bid = str(int(1000 * prices[0].get('bid')))
-                self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
-            elif 'USD_CNY' == self.symbol:
-                ask = str(int(10000 * prices[0].get('ask')))
-                bid = str(int(10000 * prices[0].get('bid')))
-                self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
-            else:
-                ask = str(int(1000 * prices[0].get('ask')))
-                bid = str(int(1000 * prices[0].get('bid')))
-                self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
+                if 'CNY_JPY' == self.symbol:
+                    ask = str(int(1000 * prices[0].get('ask')))
+                    bid = str(int(1000 * prices[0].get('bid')))
+                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
+                elif 'USD_CNY' == self.symbol:
+                    ask = str(int(10000 * prices[0].get('ask')))
+                    bid = str(int(10000 * prices[0].get('bid')))
+                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
+                else:
+                    ask = str(int(1000 * prices[0].get('ask')))
+                    bid = str(int(1000 * prices[0].get('bid')))
+                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
+
+            except:
+                sleep(10)
+                continue
 
 
 class Exchange(Thread):
@@ -131,21 +141,26 @@ class Exchange(Thread):
     def run(self):
 
         while True:
-            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+            try:
+                data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
-            self.ask = int(data[self.sask])
-            self.bid = int(data[self.sbid])
+                self.ask = int(data[self.sask])
+                self.bid = int(data[self.sbid])
         
-            up = int(data[self.last])
-            self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
-            self.p = up
+                up = int(data[self.last])
+                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
+                self.p = up
         
-            a = str(self.ask)
-            b = str(self.bid)
-            l = str(self.p)
+                a = str(self.ask)
+                b = str(self.bid)
+                l = str(self.p)
     
-            self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
-            sleep(Window.PERIOD)
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
+                sleep(Window.PERIOD)
+
+            except:
+                sleep(10)
+                continue
 
 
 class ForExchange(Exchange):
@@ -161,28 +176,33 @@ class ForExchange(Exchange):
     def run(self):
     
         while True:
-            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+            try:
+                data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
-            if self.name == 'BTC-e':
-                data = data['btc_usd']
-            elif self.name == 'Poloniex':
-                data = data['USDT_BTC']
-            elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
-                data = data['ticker']
+                if self.name == 'BTC-e':
+                    data = data['btc_usd']
+                elif self.name == 'Poloniex':
+                    data = data['USDT_BTC']
+                elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
+                    data = data['ticker']
 
-            self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
-            self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
-            up = float(data[self.last]) * OANDA.PRICE[self.base]
+                self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
+                self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
+                up = float(data[self.last]) * OANDA.PRICE[self.base]
 
-            self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
-            self.p = up
+                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
+                self.p = up
 
-            a = str(int(round(self.ask)))
-            b = str(int(round(self.bid)))
-            l = str(int(round(self.p)))
+                a = str(int(round(self.ask)))
+                b = str(int(round(self.bid)))
+                l = str(int(round(self.p)))
 
-            self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
-            sleep(Window.PERIOD)
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
+                sleep(Window.PERIOD)
+
+            except:
+                sleep(10)
+                continue
 
 
 class EthereumExchange(ForExchange):
@@ -197,24 +217,29 @@ class EthereumExchange(ForExchange):
     def run(self):
     
         while True:
-            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+            try:
+                data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
-            if self.name == 'BTC-e ETH':
-                data = data['eth_usd']
+                if self.name == 'BTC-e ETH':
+                    data = data['eth_usd']
 
-            self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
-            self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
-            up = float(data[self.last]) * OANDA.PRICE[self.base]
+                self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
+                self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
+                up = float(data[self.last]) * OANDA.PRICE[self.base]
 
-            self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
-            self.p = up
+                self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
+                self.p = up
 
-            a = str(int(10.0 * self.ask))
-            b = str(int(10.0 * self.bid))
-            l = str(int(10.0 * self.p))
+                a = str(int(10.0 * self.ask))
+                b = str(int(10.0 * self.bid))
+                l = str(int(10.0 * self.p))
 
-            self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
-            sleep(Window.PERIOD)
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
+                sleep(Window.PERIOD)
+
+            except:
+                sleep(10)
+                continue
 
 
 if __name__ == '__main__':
