@@ -185,6 +185,38 @@ class ForExchange(Exchange):
             sleep(Window.PERIOD)
 
 
+class EthereumExchange(ForExchange):
+
+    def __init__(self, root, name, url, last, sask, sbid):    
+
+        if name == 'Bitfinex ETH':
+            Label(root).pack()
+
+        ForExchange.__init__(self, root, name, url, last, sask, sbid)
+
+    def run(self):
+    
+        while True:
+            data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+
+            if self.name == 'BTC-e ETH':
+                data = data['eth_usd']
+
+            self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
+            self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
+            up = float(data[self.last]) * OANDA.PRICE[self.base]
+
+            self.label.configure(fg = ('green' if self.p < up else ('red' if self.p > up else 'black')))
+            self.p = up
+
+            a = str(int(10.0 * self.ask))
+            b = str(int(10.0 * self.bid))
+            l = str(int(10.0 * self.p))
+
+            self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
+            sleep(Window.PERIOD)
+
+
 if __name__ == '__main__':
 
     ssl._create_default_https_context = ssl._create_unverified_context
@@ -210,6 +242,8 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoin week', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
 #        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
+        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
+        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
         ] + \
         [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()], \
     )
