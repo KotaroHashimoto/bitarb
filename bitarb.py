@@ -33,8 +33,7 @@ class Window(Thread):
 
         self.str = StringVar()
         self.str.set('')
-        self.label = Label(self.root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
-        self.label.pack()
+        Label(self.root, textvariable = self.str, font = (Window.FONT, Window.FSIZE)).pack()
 
         Label(text = 'Exchange' + (' '*8) + '\tLast\tAsk\tBid', font = (Window.FONT, Window.FSIZE)).pack()
         
