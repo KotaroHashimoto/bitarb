@@ -115,7 +115,7 @@ class OANDA(Thread):
             except:
                 self.label.configure(fg = 'gray')
                 sleep(10)
-                self.label.configure(bg = 'black')
+                self.label.configure(fg = 'black')
                 continue
 
 
