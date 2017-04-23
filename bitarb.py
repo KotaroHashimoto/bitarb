@@ -261,12 +261,20 @@ class ForExchange(Exchange):
                     data = data['USDT_BTC']
                 elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
                     data = data['ticker']
+                elif self.name == 'Kraken':
+                    data = data['result']['XXBTZUSD']
 
-                self.rask = float(data[self.sask])
+                if self.name == 'Kraken':
+                    self.rask = float(data[self.sask][0])
+                    self.rbid = float(data[self.sbid][0])
+                    self.rp = float(data[self.last][0])
+                else:
+                    self.rask = float(data[self.sask])
+                    self.rbid = float(data[self.sbid])
+                    self.rp = float(data[self.last])
+
                 self.ask = self.rask * OANDA.PRICE[self.base]
-                self.rbid = float(data[self.sbid])
                 self.bid = self.rbid * OANDA.PRICE[self.base]
-                self.rp = float(data[self.last])
                 up = self.rp * OANDA.PRICE[self.base]
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
@@ -385,6 +393,7 @@ if __name__ == '__main__':
 
     foreign = [ \
         ForExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
+        ForExchange(window.root, 'Kraken', 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD', 'c', 'a', 'b'), \
         ForExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
         ForExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
         ForExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
