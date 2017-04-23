@@ -5,6 +5,7 @@ from datetime import datetime
 from threading import Thread
 from time import sleep
 from oandapy import API
+import datetime as dt
 import ssl
 from sys import version_info, exit
 
@@ -21,7 +22,7 @@ else:
 
 class Window(Thread):
 
-    PERIOD = 0.5
+    PERIOD = 1.5
     FONT = 'Arial'
     FSIZE = 12
 
@@ -144,7 +145,7 @@ class Exchange(Thread):
         while True:
             try:
                 data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
-
+               
                 self.ask = int(data[self.sask])
                 self.bid = int(data[self.sbid])
         
@@ -155,7 +156,72 @@ class Exchange(Thread):
                 a = str(self.ask)
                 b = str(self.bid)
                 l = str(self.p)
-    
+                
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
+                sleep(Window.PERIOD)
+
+            except:
+                self.label.configure(fg = 'gray')
+                sleep(10)
+                self.label.configure(fg = 'black')
+                continue
+
+
+class Future(Thread):
+
+    def __init__(self, root, name, url, last, sask, sbid, wk):
+        Thread.__init__(self)
+
+        self.wk = wk
+        self.name = name
+        self.url = url
+        self.last = last
+        self.sask = sask
+        self.sbid = sbid
+
+        self.str = StringVar()
+        self.str.set('')
+        self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
+        self.label.pack()
+
+        self.ask = 0
+        self.bid = 0
+        self.p = 0
+
+    def getSuffix(self):
+        today = dt.date.today()
+        t = (today.isoweekday() + 1) % 7
+
+        d = today + dt.timedelta(days = 13 - t)
+
+        if self.wk == 1:
+            d = today + dt.timedelta(days = 6 - t)
+        elif self.wk == 2:
+            d = today + dt.timedelta(days = 13 - t)
+        else:
+            d = today + dt.timedelta(days = 20 - t)
+
+        ret = d.strftime('%d') + d.strftime('%b').upper() + d.strftime('%Y')
+        self.name = 'bF ' + d.strftime('%d') + ' ' + d.strftime('%b') + ' ' + d.strftime('%y')
+        return ret
+
+    def run(self):
+
+        while True:
+            try:
+                data = load(urlopen(Request(self.url + self.getSuffix(), headers = {'User-Agent':'Hoge Browser'})))
+               
+                self.ask = int(data[self.sask])
+                self.bid = int(data[self.sbid])
+        
+                up = int(data[self.last])
+                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
+                self.p = up
+        
+                a = str(self.ask)
+                b = str(self.bid)
+                l = str(self.p)
+                
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
                 sleep(Window.PERIOD)
 
@@ -169,7 +235,14 @@ class Exchange(Thread):
 class ForExchange(Exchange):
 
     def __init__(self, root, name, url, last, sask, sbid):    
+        if name == 'Poloniex':
+            Label(root).pack()
+
         Exchange.__init__(self, root, name, url, last, sask, sbid)
+
+        self.rask = 0
+        self.rbid = 0
+        self.rp = 0
         
         if 'Houbi' == self.name or 'BTCC' == self.name or 'OKCoinCN' == self.name:
             self.base = 'CNY_JPY'
@@ -189,9 +262,12 @@ class ForExchange(Exchange):
                 elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
                     data = data['ticker']
 
-                self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
-                self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
-                up = float(data[self.last]) * OANDA.PRICE[self.base]
+                self.rask = float(data[self.sask])
+                self.ask = self.rask * OANDA.PRICE[self.base]
+                self.rbid = float(data[self.sbid])
+                self.bid = self.rbid * OANDA.PRICE[self.base]
+                self.rp = float(data[self.last])
+                up = self.rp * OANDA.PRICE[self.base]
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
@@ -201,6 +277,47 @@ class ForExchange(Exchange):
                 l = str(int(round(self.p)))
 
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
+                sleep(Window.PERIOD)
+
+            except:
+                self.label.configure(fg = 'gray')
+                sleep(10)
+                self.label.configure(fg = 'black')
+                continue
+
+class USExchange(Thread):
+
+    def __init__(self, root, parent):
+        Thread.__init__(self)
+
+        self.name = parent.name
+        self.parent = parent
+        self.str = StringVar()
+        self.str.set('')
+        self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
+        self.label.pack()
+
+        if parent.name == 'Poloniex':
+            Label(root).pack()
+
+        self.p = 0
+        
+    def run(self):
+    
+        while True:
+            try:
+                self.ask = self.parent.rask
+                self.bid = self.parent.rbid
+                up = self.parent.rp
+
+                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
+                self.p = up
+
+                a = str(int(round(self.ask)))
+                b = str(int(round(self.bid)))
+                l = str(int(round(self.p)))
+
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
                 sleep(Window.PERIOD)
 
             except:
@@ -255,14 +372,18 @@ if __name__ == '__main__':
 
     window = Window('BTC/JPY Live Price')
 
-    exchangeList = tuple([ \
-        window, \
-        Exchange(window.root, 'bitFlyerFX', 'https://api.bitflyer.jp/v1/getticker?product_code=FX_BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
+    base = [ \
+        Future(window.root, 'bF Future This Week', 'https://api.bitflyer.jp/v1/getticker?product_code=BTCJPY', 'ltp', 'best_ask', 'best_bid', 1), \
+        Future(window.root, 'bF Future Next Week', 'https://api.bitflyer.jp/v1/getticker?product_code=BTCJPY', 'ltp', 'best_ask', 'best_bid', 2), \
+        Exchange(window.root, 'bitFlyer FX', 'https://api.bitflyer.jp/v1/getticker?product_code=FX_BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
         Exchange(window.root, 'bitFlyer', 'https://api.bitflyer.jp/v1/getticker?product_code=BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
         Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'sell', 'buy'), \
         Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
-        Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
+        Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid')
+        ]
+
+    foreign = [ \
         ForExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
         ForExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
         ForExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
@@ -272,13 +393,21 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoinCOM', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin week', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
-#        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
-        ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy')
+        ]
+
+    us = [USExchange(window.root, e) for e in foreign]
+
+    eth = [ \
         EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
-        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
-        ] + \
-        [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()], \
-    )
+        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell')
+        ] 
+
+    exchangeList = tuple([window] + \
+        base + foreign + us + eth + \
+        [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()]
+        )
 
     for e in exchangeList:
         e.setDaemon(True)
