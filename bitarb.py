@@ -253,7 +253,13 @@ class ForExchange(Exchange):
     
         while True:
             try:
-                data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+                if self.name == 'coinbase':
+                    data = {}
+                    data[self.last] = load(urlopen(Request(self.url + self.last, headers = {'User-Agent':'Hoge Browser'})))['data']['amount']
+                    data[self.sask] = load(urlopen(Request(self.url + self.sask, headers = {'User-Agent':'Hoge Browser'})))['data']['amount']
+                    data[self.sbid] = load(urlopen(Request(self.url + self.sbid, headers = {'User-Agent':'Hoge Browser'})))['data']['amount']
+                else:
+                    data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
                 if self.name == 'BTC-e':
                     data = data['btc_usd']
@@ -397,6 +403,7 @@ if __name__ == '__main__':
         ForExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
         ForExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
         ForExchange(window.root, 'GDAX', 'https://api.gdax.com/products/BTC-USD/ticker', 'price', 'ask', 'bid'), \
+        ForExchange(window.root, 'coinbase', 'https://api.coinbase.com/v2/prices/BTC-USD/', 'spot', 'buy', 'sell'), \
         ForExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
         ForExchange(window.root, 'OKCoinCOM', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin this wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
