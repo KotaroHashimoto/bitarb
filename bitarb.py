@@ -286,9 +286,9 @@ class ForExchange(Exchange):
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
 
-                a = str(int(round(self.ask)))
-                b = str(int(round(self.bid)))
-                l = str(int(round(self.p)))
+                a = str(round(self.ask))
+                b = str(round(self.bid))
+                l = str(round(self.p))
 
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
                 sleep(Window.PERIOD)
@@ -327,9 +327,9 @@ class USExchange(Thread):
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
 
-                a = str(int(round(self.ask)))
-                b = str(int(round(self.bid)))
-                l = str(int(round(self.p)))
+                a = str(round(self.ask, 1))
+                b = str(round(self.bid, 1))
+                l = str(round(self.p, 1))
 
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
                 sleep(Window.PERIOD)
@@ -359,18 +359,22 @@ class EthereumExchange(ForExchange):
                 if self.name == 'BTC-e ETH':
                     data = data['eth_usd']
 
-                self.ask = float(data[self.sask]) * OANDA.PRICE[self.base]
-                self.bid = float(data[self.sbid]) * OANDA.PRICE[self.base]
-                up = float(data[self.last]) * OANDA.PRICE[self.base]
+                self.ask = float(data[self.sask])# * OANDA.PRICE[self.base]
+                self.bid = float(data[self.sbid])# * OANDA.PRICE[self.base]
+                up = float(data[self.last])# * OANDA.PRICE[self.base]
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
 
-                a = str(int(10.0 * self.ask))
-                b = str(int(10.0 * self.bid))
-                l = str(int(10.0 * self.p))
+#                a = str(int(10.0 * self.ask))
+#                b = str(int(10.0 * self.bid))
+#                l = str(int(10.0 * self.p))
+                a = str(round(self.ask, 1))
+                b = str(round(self.bid, 1))
+                l = str(round(self.p, 1))
 
-                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
+#                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
                 sleep(Window.PERIOD)
 
             except:
