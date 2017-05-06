@@ -264,7 +264,9 @@ class ForExchange(Exchange):
                 if self.name == 'BTC-e':
                     data = data['btc_usd']
                 elif self.name == 'Poloniex':
-                    data = data['USDT_BTC']
+                    XemExchange.POLOBTCUSD = data['USDT_BTC']
+                    XemExchange.POLOXEMBTC = data['BTC_XEM']
+                    data = XemExchange.POLOBTCUSD
                 elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
                     data = data['ticker']
                 elif self.name == 'Kraken':
@@ -384,6 +386,55 @@ class EthereumExchange(ForExchange):
                 continue
 
 
+class XemExchange(ForExchange):
+
+    POLOXEMBTC = {}
+    POLOBTCUSD = {}
+
+    def __init__(self, root, name, url, last, sask, sbid):    
+
+        if name == 'Zaif XEM':
+            Label(root).pack()
+
+        ForExchange.__init__(self, root, name, url, last, sask, sbid)
+
+    def run(self):
+    
+        while True:
+            try:
+                if self.name == 'Zaif XEM':
+                    data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+
+                    self.ask = float(data[self.sask])# * OANDA.PRICE[self.base]
+                    self.bid = float(data[self.sbid])# * OANDA.PRICE[self.base]
+                    up = float(data[self.last])# * OANDA.PRICE[self.base]
+
+                elif self.name == 'Poloniex XEM':
+                    self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * float(XemExchange.POLOBTCUSD[self.sask]) * OANDA.PRICE[self.base]
+                    self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * float(XemExchange.POLOBTCUSD[self.sbid]) * OANDA.PRICE[self.base]
+                    up = float(XemExchange.POLOXEMBTC[self.last]) * float(XemExchange.POLOBTCUSD[self.last]) * OANDA.PRICE[self.base]
+
+                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
+                self.p = up
+
+#                a = str(int(10.0 * self.ask))
+#                b = str(int(10.0 * self.bid))
+#                l = str(int(10.0 * self.p))
+                a = str(round(self.ask, 4))
+                b = str(round(self.bid, 4))
+                l = str(round(self.p, 4))
+
+#                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
+                sleep(Window.PERIOD)
+
+            except:
+                self.label.configure(fg = 'gray')
+                sleep(10)
+                self.label.configure(fg = 'black')
+                continue
+
+
 if __name__ == '__main__':
 
     ssl._create_default_https_context = ssl._create_unverified_context
@@ -420,13 +471,18 @@ if __name__ == '__main__':
 
     us = [USExchange(window.root, e) for e in foreign]
 
+    xem = [ \
+        XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
+        XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
+        ] 
+
     eth = [ \
         EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
         EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell')
         ] 
 
     exchangeList = tuple([window] + \
-        base + foreign + us + eth + \
+        base + foreign + us + xem + eth + \
         [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()]
         )
 
