@@ -145,6 +145,9 @@ class Exchange(Thread):
         while True:
             try:
                 data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+
+                if self.name == 'Zaif':
+                    XemExchange.ZAIFBTCJPY = data
                
                 self.ask = int(data[self.sask])
                 self.bid = int(data[self.sbid])
@@ -264,9 +267,8 @@ class ForExchange(Exchange):
                 if self.name == 'BTC-e':
                     data = data['btc_usd']
                 elif self.name == 'Poloniex':
-                    XemExchange.POLOBTCUSD = data['USDT_BTC']
                     XemExchange.POLOXEMBTC = data['BTC_XEM']
-                    data = XemExchange.POLOBTCUSD
+                    data = data['USDT_BTC']
                 elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
                     data = data['ticker']
                 elif self.name == 'Kraken':
@@ -386,22 +388,23 @@ class EthereumExchange(ForExchange):
                 continue
 
 
-class XemExchange(ForExchange):
+class XemExchange(Exchange):
 
     POLOXEMBTC = {}
-    POLOBTCUSD = {}
+    ZAIFBTCJPY = {}
 
     def __init__(self, root, name, url, last, sask, sbid):    
 
         if name == 'Zaif XEM':
             Label(root).pack()
 
-        ForExchange.__init__(self, root, name, url, last, sask, sbid)
+        Exchange.__init__(self, root, name, url, last, sask, sbid)
 
     def run(self):
     
         while True:
             try:
+                up = 0
                 if self.name == 'Zaif XEM':
                     data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
@@ -409,10 +412,10 @@ class XemExchange(ForExchange):
                     self.bid = float(data[self.sbid])
                     up = float(data[self.last])
 
-                elif self.name == 'Poloniex XEM':
-                    self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * float(XemExchange.POLOBTCUSD[self.sask]) * OANDA.PRICE[self.base]
-                    self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * float(XemExchange.POLOBTCUSD[self.sbid]) * OANDA.PRICE[self.base]
-                    up = float(XemExchange.POLOXEMBTC[self.last]) * float(XemExchange.POLOBTCUSD[self.last]) * OANDA.PRICE[self.base]
+                elif self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY and XemExchange.POLOXEMBTC:
+                    self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * float(XemExchange.ZAIFBTCJPY['ask'])
+                    self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * float(XemExchange.ZAIFBTCJPY['bid'])
+                    up = float(XemExchange.POLOXEMBTC[self.last]) * float(XemExchange.ZAIFBTCJPY['last'])
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
@@ -424,7 +427,7 @@ class XemExchange(ForExchange):
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
                 sleep(Window.PERIOD)
 
-            except:
+            except Exception as e:
                 self.label.configure(fg = 'gray')
                 sleep(10)
                 self.label.configure(fg = 'black')
