@@ -147,7 +147,7 @@ class Exchange(Thread):
                 data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
                 if self.name == 'Zaif':
-                    XemExchange.ZAIFBTCJPY = data
+                    XemExchange.ZAIFBTCJPY = float(data[self.last])
                
                 self.ask = int(data[self.sask])
                 self.bid = int(data[self.sbid])
@@ -390,7 +390,7 @@ class EthereumExchange(ForExchange):
 
 class XemExchange(Exchange):
 
-    POLOXEMBTC = {}
+    POLOXEMBTC = 0
     ZAIFBTCJPY = {}
 
     def __init__(self, root, name, url, last, sask, sbid):    
@@ -412,10 +412,10 @@ class XemExchange(Exchange):
                     self.bid = float(data[self.sbid])
                     up = float(data[self.last])
 
-                elif self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY and XemExchange.POLOXEMBTC:
-                    self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * float(XemExchange.ZAIFBTCJPY['ask'])
-                    self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * float(XemExchange.ZAIFBTCJPY['bid'])
-                    up = float(XemExchange.POLOXEMBTC[self.last]) * float(XemExchange.ZAIFBTCJPY['last'])
+                elif self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY:
+                    self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
+                    self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
+                    up = float(XemExchange.POLOXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
