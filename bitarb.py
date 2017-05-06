@@ -405,9 +405,9 @@ class XemExchange(ForExchange):
                 if self.name == 'Zaif XEM':
                     data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
-                    self.ask = float(data[self.sask])# * OANDA.PRICE[self.base]
-                    self.bid = float(data[self.sbid])# * OANDA.PRICE[self.base]
-                    up = float(data[self.last])# * OANDA.PRICE[self.base]
+                    self.ask = float(data[self.sask])
+                    self.bid = float(data[self.sbid])
+                    up = float(data[self.last])
 
                 elif self.name == 'Poloniex XEM':
                     self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * float(XemExchange.POLOBTCUSD[self.sask]) * OANDA.PRICE[self.base]
@@ -417,14 +417,10 @@ class XemExchange(ForExchange):
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
 
-#                a = str(int(10.0 * self.ask))
-#                b = str(int(10.0 * self.bid))
-#                l = str(int(10.0 * self.p))
                 a = str(round(self.ask, 4))
                 b = str(round(self.bid, 4))
                 l = str(round(self.p, 4))
 
-#                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:4] + '.' + l[4:] + '\t' +  a[:4] + '.' + a[4:] + '\t' +  b[:4] + '.' + b[4:])
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
                 sleep(Window.PERIOD)
 
@@ -449,7 +445,7 @@ if __name__ == '__main__':
         Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'sell', 'buy'), \
         Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
-        Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid')
+        Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
         ]
 
     foreign = [ \
@@ -466,7 +462,7 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'Houbi', 'http://api.huobi.com/staticmarket/ticker_btc_json.js', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'BTCC', 'https://pro-data.btcc.com/data/pro/ticker?symbol=XBTCNY', 'Last', 'AskPrice', 'BidPrice'), \
-        ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy')
+        ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ]
 
     us = [USExchange(window.root, e) for e in foreign]
@@ -478,7 +474,7 @@ if __name__ == '__main__':
 
     eth = [ \
         EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
-        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell')
+        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
         ] 
 
     exchangeList = tuple([window] + \
