@@ -76,7 +76,7 @@ class OANDA(Thread):
 
     PRICE = {'USD_JPY':1, 'EUR_JPY':1, 'GBP_JPY':1, 'CNY_JPY':1, 'USD_CNY':1}
     
-    def __init__(self, root, symbol):
+    def __init__(self, root, symbol, display = True):
         Thread.__init__(self)
         
         if symbol == 'USD_JPY':
@@ -85,7 +85,10 @@ class OANDA(Thread):
         self.lstr = StringVar()
         self.lstr.set('')
         self.label = Label(root, textvariable = self.lstr, font = (Window.FONT, Window.FSIZE))
-        self.label.pack()
+
+        if display:
+            self.label.pack()
+
         self.symbol = symbol
 
         self.oanda = API(environment='practice', access_token='f80296b600eddebbb0402eeabce34139-55d481314b19c1127978ecd05c9dca65')
@@ -393,12 +396,33 @@ class XemExchange(Exchange):
     POLOXEMBTC = 0
     ZAIFBTCJPY = {}
 
+    ZXEM = 0
+    PXEM = 0
+    
+
     def __init__(self, root, name, url, last, sask, sbid):    
 
         if name == 'Zaif XEM':
             Label(root).pack()
 
         Exchange.__init__(self, root, name, url, last, sask, sbid)
+
+        if name == 'Poloniex XEM':
+            self.xstr = StringVar()
+            self.xstr.set('')
+            self.xlabel = Label(root, textvariable = self.xstr, font = (Window.FONT, Window.FSIZE))
+            self.xlabel.pack()
+
+            self.pstr = StringVar()
+            self.pstr.set('')
+            self.plabel = Label(root, textvariable = self.pstr, font = (Window.FONT, Window.FSIZE))
+            self.plabel.pack()
+
+            self.zstr = StringVar()
+            self.zstr.set('')
+            self.zlabel = Label(root, textvariable = self.zstr, font = (Window.FONT, Window.FSIZE))
+            self.zlabel.pack()
+
 
     def run(self):
     
@@ -411,11 +435,13 @@ class XemExchange(Exchange):
                     self.ask = float(data[self.sask])
                     self.bid = float(data[self.sbid])
                     up = float(data[self.last])
+                    XemExchange.ZXEM = up
 
                 elif self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY:
                     self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
                     self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
                     up = float(XemExchange.POLOXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
+                    XemExchange.PXEM = up
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
@@ -432,6 +458,14 @@ class XemExchange(Exchange):
                     l = l + '0'*(6-len(l))
 
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
+
+                if self.name == 'Poloniex XEM' and 0 < XemExchange.PXEM:
+                    v = round(100 * (XemExchange.ZXEM / XemExchange.PXEM - 1), 4)
+                    self.xstr.set('Zaif XEM / Poloniex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
+
+                    self.pstr.set('Poloniex XEM/BTC last \t' + XemExchange.POLOXEMBTC[self.last])
+                    self.zstr.set('Zaif BTC/JPY last \t\t' + str(XemExchange.ZAIFBTCJPY))
+
                 sleep(Window.PERIOD)
 
             except Exception as e:
@@ -475,7 +509,8 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ]
 
-    us = [USExchange(window.root, e) for e in foreign]
+#    us = [USExchange(window.root, e) for e in foreign] #この行の先頭の#を外すとBTCUSDとBTCCNY表示
+    us = [] #この行の先頭の#を外すと BTCUSDとBTCCNY非表示
 
     xem = [ \
         XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
@@ -487,10 +522,10 @@ if __name__ == '__main__':
         EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
         ] 
 
-    exchangeList = tuple([window] + \
-        base + foreign + us + xem + eth + \
-        [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()]
-        )
+#    oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
+    oanda = [OANDA(window.root, currencyPair, False) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート非表示
+
+    exchangeList = tuple([window] + base + foreign + us + xem + eth + oanda)
 
     for e in exchangeList:
         e.setDaemon(True)
