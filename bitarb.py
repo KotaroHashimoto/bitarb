@@ -450,12 +450,12 @@ class XemExchange(Exchange):
                 b = str(round(self.bid, 4))
                 l = str(round(self.p, 4))
 
-                if len(a) < 6:
-                    a = a + '0'*(6-len(a))
+                if len(a) < 7:
+                    a = a + '0'*(7-len(a))
                 if len(b) < 6:
-                    b = b + '0'*(6-len(b))
+                    b = b + '0'*(7-len(b))
                 if len(l) < 6:
-                    l = l + '0'*(6-len(l))
+                    l = l + '0'*(7-len(l))
 
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
 
