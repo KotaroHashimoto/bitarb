@@ -137,7 +137,8 @@ class Exchange(Thread):
         self.str = StringVar()
         self.str.set('')
         self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
-        self.label.pack()
+        if name != 'Quoine USD':
+            self.label.pack()
 
         self.ask = 0
         self.bid = 0
@@ -489,7 +490,7 @@ if __name__ == '__main__':
         Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'sell', 'buy'), \
         Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
-        Exchange(window.root, 'Quoine', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
+        Exchange(window.root, 'Quoine JPY', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
         ]
 
     foreign = [ \
@@ -500,6 +501,7 @@ if __name__ == '__main__':
         ForExchange(window.root, 'GDAX', 'https://api.gdax.com/products/BTC-USD/ticker', 'price', 'ask', 'bid'), \
         ForExchange(window.root, 'coinbase', 'https://api.coinbase.com/v2/prices/BTC-USD/', 'spot', 'buy', 'sell'), \
         ForExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
+        ForExchange(window.root, 'Quoine USD', 'https://api.quoine.com/products/1', 'last_traded_price', 'market_ask', 'market_bid'), \
         ForExchange(window.root, 'OKCoinCOM', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin this wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
@@ -509,8 +511,8 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ]
 
-#    us = [USExchange(window.root, e) for e in foreign] #この行の先頭の#を外すとBTCUSDとBTCCNY表示
-    us = [] #この行の先頭の#を外すと BTCUSDとBTCCNY非表示
+    us = [USExchange(window.root, e) for e in foreign] #この行の先頭の#を外すとBTCUSDとBTCCNY表示
+#    us = [] #この行の先頭の#を外すと BTCUSDとBTCCNY非表示
 
     xem = [ \
         XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
