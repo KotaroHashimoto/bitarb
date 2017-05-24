@@ -137,8 +137,7 @@ class Exchange(Thread):
         self.str = StringVar()
         self.str.set('')
         self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
-        if name != 'Quoine USD':
-            self.label.pack()
+        self.label.pack()
 
         self.ask = 0
         self.bid = 0
@@ -242,7 +241,7 @@ class Future(Thread):
 class ForExchange(Exchange):
 
     def __init__(self, root, name, url, last, sask, sbid):    
-        if name == 'Poloniex':
+        if name == 'Quoine USD':
             Label(root).pack()
 
         Exchange.__init__(self, root, name, url, last, sask, sbid)
@@ -312,7 +311,7 @@ class USExchange(Thread):
     def __init__(self, root, parent):
         Thread.__init__(self)
 
-        if parent.name == 'Poloniex':
+        if parent.name == 'Quoine USD':
             Label(root).pack()
 
         self.name = parent.name
@@ -494,6 +493,7 @@ if __name__ == '__main__':
         ]
 
     foreign = [ \
+        ForExchange(window.root, 'Quoine USD', 'https://api.quoine.com/products/1', 'last_traded_price', 'market_ask', 'market_bid'), \
         ForExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
         ForExchange(window.root, 'Kraken', 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD', 'c', 'a', 'b'), \
         ForExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
@@ -501,7 +501,6 @@ if __name__ == '__main__':
         ForExchange(window.root, 'GDAX', 'https://api.gdax.com/products/BTC-USD/ticker', 'price', 'ask', 'bid'), \
         ForExchange(window.root, 'coinbase', 'https://api.coinbase.com/v2/prices/BTC-USD/', 'spot', 'buy', 'sell'), \
         ForExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
-        ForExchange(window.root, 'Quoine USD', 'https://api.quoine.com/products/1', 'last_traded_price', 'market_ask', 'market_bid'), \
         ForExchange(window.root, 'OKCoinCOM', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin this wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
