@@ -7,6 +7,9 @@ SellZaif_BuyPolo_Percentage = 5
 # Zaif / Polo がこの数値％以下となったら Zaif XEM買い、Polo XEM売り
 BuyZaif_SellPolo_Percentage = -5
 
+# 一回に取引するXEMの最大枚数
+Max_Xem_Trade_Amount = 1000
+
 
 # Zaif APIキー
 Zaif_Key = ''
@@ -128,10 +131,10 @@ class Position:
             return (None, 0)
 
         elif SellZaif_BuyPolo_Percentage <= Position.DIFF:
-            return ('Sell Zaif', floor(min(zbid[1], pask[1])))
+            return ('Sell Zaif', floor(min(min(Max_Xem_Trade_Amount, zbid[1]), pask[1])))
 
         elif Position.DIFF <= BuyZaif_SellPolo_Percentage:
-            return ('Buy Zaif', floor(min(zask[1], pbid[1])))
+            return ('Buy Zaif', floor(min(min(Max_Xem_Trade_Amount, zask[1]), pbid[1])))
 
 
     def checkFund(self, op, amount, zask, pask):
@@ -168,7 +171,7 @@ if __name__ == '__main__':
             print(z + d + p, end = '\r')
 
             op, amount = pos.operation(zaif.ask, zaif.bid, polo.ask, polo.bid)
-            if pos.checkFund(op, amount, zaif.ask, polo.ask) or True:
+            if pos.checkFund(op, amount, zaif.ask, polo.ask):
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
                     print(zaif.sell(amount))
