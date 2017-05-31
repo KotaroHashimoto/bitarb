@@ -185,7 +185,7 @@ if __name__ == '__main__':
             else:
                 print('\nFunds not enough.\n')
                     
-            time.sleep(1)
+            time.sleep(1.5)
 
         except Exception as e:
             print(e)
