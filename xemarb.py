@@ -69,10 +69,10 @@ class Zaif:
         return 'Zaif: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.trade(currency_pair = 'xem_jpy', action = 'bid', price = self.bid[0], amount = am)
+        return self.private.trade(currency_pair = 'xem_jpy', action = 'ask', price = self.bid[0], amount = am)
 
     def buy(self, am):
-        return self.private.trade(currency_pair = 'xem_jpy', action = 'ask', price = self.ask[0], amount = am)
+        return self.private.trade(currency_pair = 'xem_jpy', action = 'bid', price = self.ask[0], amount = am)
 
 
 class Polo:
