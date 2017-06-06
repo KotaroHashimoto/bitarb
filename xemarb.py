@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Zaif / Polo がこの数値％以上となったら Zaif XEM売り、Polo XEM買い
-SellZaif_BuyPolo_Percentage = 5
+SellZaif_BuyPolo_Percentage = 1
 
 # Zaif / Polo がこの数値％以下となったら Zaif XEM買い、Polo XEM売り
-BuyZaif_SellPolo_Percentage = -5
+BuyZaif_SellPolo_Percentage = -1
 
 # 一回に取引するXEMの最大枚数
 Max_Xem_Trade_Amount = 1000
@@ -91,8 +91,8 @@ class Polo:
     def watch(self):
 
         res = Polo.private.returnBalances()
-        Polo.BTC = res['BTC']
-        Polo.XEM = res['XEM']
+        Polo.BTC = float(res['BTC'])
+        Polo.XEM = float(res['XEM'])
 
         res = Polo.public.returnOrderBook('BTC_XEM')
 
