@@ -11,6 +11,16 @@ BuyZaif_SellPolo_Percentage = -1
 Max_Xem_Trade_Amount = 1000
 
 
+# 最も安い売り板の価格 x Buy_Rate_Ratio の価格に指値買いが入る
+Buy_Rate_Ratio = 2.0
+
+# 最も高い買い板の価格 x Sell_Rate_Ratio の価格に指値売りが入る
+Sell_Rate_Ratio = 0.5
+
+# 手数料％: (価格差％ - Comission) ％だけ多くXEMを買う
+Comission = 0.35
+
+
 # Zaif APIキー
 Zaif_Key = ''
 
@@ -69,10 +79,10 @@ class Zaif:
         return 'Zaif: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.trade(currency_pair = 'xem_jpy', action = 'ask', price = self.bid[0], amount = am)
+        return self.private.trade(currency_pair = 'xem_jpy', action = 'ask', price = self.bid[0] * Sell_Rate_Ratio, amount = am)
 
     def buy(self, am):
-        return self.private.trade(currency_pair = 'xem_jpy', action = 'bid', price = self.ask[0], amount = am)
+        return self.private.trade(currency_pair = 'xem_jpy', action = 'bid', price = self.ask[0] * Buy_Rate_Ratio, amount = am)
 
 
 class Polo:
@@ -102,10 +112,10 @@ class Polo:
         return 'Polo: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.sell('BTC_XEM', self.bid[0], am)
+        return self.private.sell('BTC_XEM', self.bid[0] * Sell_Rate_Ratio, am)
 
     def buy(self, am):
-        return self.private.buy('BTC_XEM', self.ask[0], am)
+        return self.private.buy('BTC_XEM', self.ask[0] * Buy_Rate_Ratio, am)
 
 
 class Position:
@@ -174,12 +184,12 @@ if __name__ == '__main__':
             if pos.checkFund(op, amount, zaif.ask, polo.ask):
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
+                    print(polo.buy(round(amount * (100.0 + Position.DIFF - Comission) / 100.0)))
                     print(zaif.sell(amount))
-                    print(polo.buy(amount))
 
-                elif op == 'Buy Zaif':
+                elif op == 'Buy Zaif' or True:
                     print('\nBuy Zaif XEM, Sell Polo, XEM: ' + str(amount)  + '\n')
-                    print(zaif.buy(amount))
+                    print(zaif.buy(round(amount * (100.0 - Position.DIFF - Comission) / 100.0)))
                     print(polo.sell(amount))
 
             else:
