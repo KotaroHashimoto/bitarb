@@ -17,8 +17,8 @@ Buy_Rate_Ratio = 2.0
 # 最も高い買い板の価格 x Sell_Rate_Ratio の価格に指値売りが入る
 Sell_Rate_Ratio = 0.5
 
-# 手数料％: (価格差％ - Comission) ％だけ多くXEMを買う
-Comission = 0.35
+# 手数料％: (価格差％ - Commission) ％だけ多くXEMを買う
+Commission = 0.35
 
 
 # Zaif APIキー
@@ -184,12 +184,12 @@ if __name__ == '__main__':
             if pos.checkFund(op, amount, zaif.ask, polo.ask):
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
-                    print(polo.buy(round(amount * (100.0 + Position.DIFF - Comission) / 100.0)))
+                    print(polo.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0)))
                     print(zaif.sell(amount))
 
                 elif op == 'Buy Zaif' or True:
                     print('\nBuy Zaif XEM, Sell Polo, XEM: ' + str(amount)  + '\n')
-                    print(zaif.buy(round(amount * (100.0 - Position.DIFF - Comission) / 100.0)))
+                    print(zaif.buy(round(amount * (100.0 - Position.DIFF - Commission) / 100.0)))
                     print(polo.sell(amount))
 
             else:
