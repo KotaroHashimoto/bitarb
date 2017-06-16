@@ -187,7 +187,7 @@ if __name__ == '__main__':
                     print(polo.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0)))
                     print(zaif.sell(amount))
 
-                elif op == 'Buy Zaif' or True:
+                elif op == 'Buy Zaif':
                     print('\nBuy Zaif XEM, Sell Polo, XEM: ' + str(amount)  + '\n')
                     print(zaif.buy(round(amount * (100.0 - Position.DIFF - Commission) / 100.0)))
                     print(polo.sell(amount))
