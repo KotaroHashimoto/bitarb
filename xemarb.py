@@ -79,10 +79,10 @@ class Zaif:
         return 'Zaif: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.trade(currency_pair = 'xem_jpy', action = 'ask', price = self.bid[0] * Sell_Rate_Ratio, amount = am)
+        return self.private.trade(currency_pair = 'xem_jpy', action = 'ask', price = round(self.bid[0] * Sell_Rate_Ratio, 4), amount = am)
 
     def buy(self, am):
-        return self.private.trade(currency_pair = 'xem_jpy', action = 'bid', price = self.ask[0] * Buy_Rate_Ratio, amount = am)
+        return self.private.trade(currency_pair = 'xem_jpy', action = 'bid', price = round(self.ask[0] * Buy_Rate_Ratio, 4), amount = am)
 
 
 class Polo:
@@ -112,10 +112,10 @@ class Polo:
         return 'Polo: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.sell('BTC_XEM', self.bid[0] * Sell_Rate_Ratio, am)
+        return self.private.sell('BTC_XEM', round(self.bid[0] * Sell_Rate_Ratio, 8), am)
 
     def buy(self, am):
-        return self.private.buy('BTC_XEM', self.ask[0] * Buy_Rate_Ratio, am)
+        return self.private.buy('BTC_XEM', round(self.ask[0] * Buy_Rate_Ratio, 8), am)
 
 
 class Position:
