@@ -150,13 +150,14 @@ class Position:
     def checkFund(self, op, amount, zask, pask):
 
         if 'Sell Zaif' == op:
-            if Zaif.XEM < amount or Polo.BTC < amount * pask[0]:
+            if Zaif.XEM < amount or Polo.BTC < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * pask[0]:
                 return False
             else:
                 return True
 
         elif 'Buy Zaif' == op:
-            if Zaif.JPY < amount * zask[0] or Polo.XEM < amount:
+
+            if Zaif.JPY < round(amount * (100.0 - Position.DIFF - Commission) / 100.0) * zask[0] or Polo.XEM < amount:
                 return False
             else:
                 return True
