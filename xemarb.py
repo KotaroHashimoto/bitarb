@@ -10,6 +10,9 @@ BuyZaif_SellPolo_Percentage = -1
 # 一回に取引するXEMの最大枚数
 Max_Xem_Trade_Amount = 1000
 
+# １トレード後に開ける間隔 [秒]
+Mask_After_Trade_Sec = 5
+
 
 # 最も安い売り板の価格 x Buy_Rate_Ratio の価格に指値買いが入る
 Buy_Rate_Ratio = 2.0
@@ -187,11 +190,13 @@ if __name__ == '__main__':
                     print('\nSell Zaif XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
                     print(polo.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0)))
                     print(zaif.sell(amount))
+                    time.sleep(Mask_After_Trade_Sec)
 
                 elif op == 'Buy Zaif':
                     print('\nBuy Zaif XEM, Sell Polo, XEM: ' + str(amount)  + '\n')
                     print(zaif.buy(round(amount * (100.0 - Position.DIFF - Commission) / 100.0)))
                     print(polo.sell(amount))
+                    time.sleep(Mask_After_Trade_Sec)
 
             else:
                 print('\nFunds not enough.\n')
