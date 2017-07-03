@@ -130,8 +130,16 @@ class Position:
 
     def diff(self, zask, zbid, pask, pbid):
 
-        zaif = zask[0] + zbid[0]
-        polo = Zaif.BTCJPY * (pask[0] + pbid[0])
+        if Zaif.BTCJPY * pask[0] < zbid[0]:
+            zaif = zbid[0]
+            polo = Zaif.BTCJPY * pask[0]
+        elif zask[0] < Zaif.BTCJPY * pbid[0]:
+            zaif = zask[0]
+            polo = Zaif.BTCJPY * pbid[0]
+
+        else:
+            zaif = 1
+            polo = 1
 
         Position.DIFF = 100 * (zaif / polo - 1)
 
