@@ -396,9 +396,10 @@ class XemExchange(Exchange):
     POLOXEMBTC = 0
     ZAIFBTCJPY = {}
 
-    ZXEM = 0
-    PXEM = 0
-    
+    ZXEM_ASK = 0
+    PXEM_ASK = 0
+    ZXEM_BID = 0
+    PXEM_BID = 0
 
     def __init__(self, root, name, url, last, sask, sbid):    
 
@@ -435,13 +436,15 @@ class XemExchange(Exchange):
                     self.ask = float(data[self.sask])
                     self.bid = float(data[self.sbid])
                     up = float(data[self.last])
-                    XemExchange.ZXEM = up
+                    XemExchange.ZXEM_ASK = self.ask
+                    XemExchange.ZXEM_BID = self.bid
 
                 elif self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY:
                     self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
                     self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
                     up = float(XemExchange.POLOXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
-                    XemExchange.PXEM = up
+                    XemExchange.PXEM_ASK = self.ask
+                    XemExchange.PXEM_BID = self.bid
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
@@ -459,10 +462,18 @@ class XemExchange(Exchange):
 
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
 
-                if self.name == 'Poloniex XEM' and 0 < XemExchange.PXEM:
-                    v = round(100 * (XemExchange.ZXEM / XemExchange.PXEM - 1), 4)
-                    self.xstr.set('Zaif XEM / Poloniex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
+                if self.name == 'Poloniex XEM' and 0 < XemExchange.PXEM_BID and 0 < XemExchange.PXEM_ASK:
 
+                    if XemExchange.PXEM_ASK < XemExchange.ZXEM_BID:
+                        v = round(100 * (XemExchange.ZXEM_BID / XemExchange.PXEM_ASK - 1), 4)
+                    
+                    elif XemExchange.ZXEM_ASK < XemExchange.PXEM_BID:
+                        v = round(100 * (XemExchange.ZXEM_ASK / XemExchange.PXEM_BID - 1), 4)
+
+                    else:
+                        v = 0
+
+                    self.xstr.set('Zaif XEM / Poloniex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
                     self.pstr.set('Poloniex XEM/BTC last \t' + XemExchange.POLOXEMBTC[self.last])
                     self.zstr.set('Zaif BTC/JPY last \t\t' + str(XemExchange.ZAIFBTCJPY))
 
