@@ -12,7 +12,6 @@ from threading import Thread
 from time import sleep, time
 import ssl
 import requests
-import jwt
 import os
 from sys import version_info, exit
 
