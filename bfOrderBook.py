@@ -24,10 +24,9 @@ else:
 
 
 class BitFlyer(Thread):
-
+    
     N = 16
     api = None
-    space = 12
 
     def __init__(self, root):
         Thread.__init__(self)
@@ -55,14 +54,14 @@ class BitFlyer(Thread):
 
                 for i in range(BitFlyer.N):
                     b = str(ret['asks'][i]['size'])
-                    b += '0' * (10 - len(b))
-                    self.str[BitFlyer.N-1 - i].set(b + ('  ' * (BitFlyer.space - len(b))) + str(ret['asks'][i]['price']) + ('  ' * BitFlyer.space))
+                    b += '0' * (8 - len(b.split('.')[-1]))
+                    self.str[BitFlyer.N-1 - i].set(b + ('  ' * (BitFlyer.N - len(b))) + str(ret['asks'][i]['price']) + ('  ' * BitFlyer.N))
 
                     a = str(ret['bids'][i]['size'])
-                    a += '0' * (10 - len(a))
-                    self.str[BitFlyer.N+1 + i].set(('  ' * BitFlyer.space) + str(ret['bids'][i]['price']) + ('  ' * (BitFlyer.space - len(a))) + a)
+                    a += '0' * (8 - len(a.split('.')[-1]))
+                    self.str[BitFlyer.N+1 + i].set(('  ' * BitFlyer.N) + str(ret['bids'][i]['price']) + ('  ' * (BitFlyer.N - len(a))) + a)
 
-                self.str[BitFlyer.N].set(('  ' * BitFlyer.space) + str(ret['mid_price']) + ('  ' * BitFlyer.space))
+                self.str[BitFlyer.N].set(('  ' * BitFlyer.N) + str(ret['mid_price']) + ('  ' * BitFlyer.N))
 
             else:
                 self.reset()
