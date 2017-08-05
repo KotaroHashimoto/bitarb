@@ -65,7 +65,7 @@ class BitFlyer(Thread):
                     barpos = self.scrollbar.get()[0]
                     index = 0
 
-                    for i in range(BitFlyer.N):
+                    for i in range(BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])):
                         b = str(ret['asks'][BitFlyer.N - 1 - i]['size'])
 
                         bsp = b.split('.')
@@ -82,7 +82,7 @@ class BitFlyer(Thread):
                     index += 1
                     self.listbox.delete(index)
 
-                    for i in range(BitFlyer.N):
+                    for i in range(BitFlyer.N if BitFlyer.N < len(ret['bids']) else len(ret['bids'])):
                         a = str(ret['bids'][i]['size'])
                         a += '0' * (8 - len(a.split('.')[-1]))
                         content =  ('' if i + 1 > 9 else '0') + str(i + 1) + '.' + ('_' * 13) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (15 - len(a))) + a
