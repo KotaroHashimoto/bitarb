@@ -25,7 +25,7 @@ else:
 
 class BitFlyer(Thread):
     
-    N = 126
+    N = 10000
     api = None
 
     def __init__(self, root):
@@ -46,11 +46,18 @@ class BitFlyer(Thread):
         BitFlyer.api = pybitflyer.API()
 
         self.listbox.delete(0, END)
-                    
-        for i in range(1 + 2 * BitFlyer.N):
+
+        ret = self.getOrderBook()
+
+        for i in range(BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])):
             self.listbox.insert(END, '')
 
-        self.listbox.see(BitFlyer.N)
+        for i in range(BitFlyer.N if BitFlyer.N < len(ret['bids']) else len(ret['bids'])):
+            self.listbox.insert(END, '')
+
+        self.listbox.insert(END, '')
+
+        self.listbox.see((BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])) - 3)
 
     def getOrderBook(self):
         return BitFlyer.api.board(product_code = 'FX_BTC_JPY')
@@ -65,14 +72,15 @@ class BitFlyer(Thread):
                     barpos = self.scrollbar.get()[0]
                     index = 0
 
-                    for i in range(BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])):
-                        b = str(ret['asks'][BitFlyer.N - 1 - i]['size'])
+                    r = BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])
+                    for i in range(r):
+                        b = str(ret['asks'][r - 1 - i]['size'])
 
                         bsp = b.split('.')
                         b = (3 - len(bsp[0])) * '_' + b
 
                         b += '0' * (8 - len(bsp[-1]))
-                        content = b + ('_' * (16 - len(b))) + str(ret['asks'][BitFlyer.N - 1 - i]['price']).split('.')[0] + ('_' * 12) + '.' + ((3 - len(str(BitFlyer.N - i))) * '0') + str(BitFlyer.N - i)
+                        content = b + ('_' * (16 - len(b))) + str(ret['asks'][r - 1 - i]['price']).split('.')[0] + ('_' * 12) + '.' + ((3 - len(str(r - i))) * '0') + str(r - i)
                         self.listbox.insert(index, content)
                         index += 1
                         self.listbox.delete(index)
@@ -82,7 +90,8 @@ class BitFlyer(Thread):
                     index += 1
                     self.listbox.delete(index)
 
-                    for i in range(BitFlyer.N if BitFlyer.N < len(ret['bids']) else len(ret['bids'])):
+                    r = BitFlyer.N if BitFlyer.N < len(ret['bids']) else len(ret['bids'])
+                    for i in range(r):
                         a = str(ret['bids'][i]['size'])
                         a += '0' * (8 - len(a.split('.')[-1]))
                         content =  ('0' * (3 - len(str(i + 1)))) + str(i + 1) + '.' + ('_' * 13) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (15 - len(a))) + a
@@ -99,7 +108,6 @@ class BitFlyer(Thread):
 
             except:
                 self.reset()
-                first = True
                 sleep(Window.PERIOD)
                 
 
