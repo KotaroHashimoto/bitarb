@@ -69,15 +69,15 @@ class BitFlyer(Thread):
                         b = str(ret['asks'][BitFlyer.N - 1 - i]['size'])
 
                         bsp = b.split('.')
-                        b = (len(bsp[0]) - 1) * '_' + b
+                        b = (3 - len(bsp[0])) * '_' + b
 
                         b += '0' * (8 - len(bsp[-1]) - len(bsp[0]) + 1)
-                        content = b + ('_' * (15 - len(b))) + str(ret['asks'][BitFlyer.N - 1 - i]['price']).split('.')[0] + ('_' * 13) + ('.' if BitFlyer.N - i > 9 else '.0') + str(BitFlyer.N - i)
+                        content = b + ('_' * (16 - len(b))) + str(ret['asks'][BitFlyer.N - 1 - i]['price']).split('.')[0] + ('_' * 12) + ('.' if BitFlyer.N - i > 9 else '.0') + str(BitFlyer.N - i)
                         self.listbox.insert(index, content)
                         index += 1
                         self.listbox.delete(index)
 
-                    content = '00.' + ('_' * 12) + str(ret['mid_price']).split('.')[0] + ('_' * 13) + '.00'
+                    content = '00.' + ('_' * 13) + str(ret['mid_price']).split('.')[0] + ('_' * 12) + '.00'
                     self.listbox.insert(index, content)
                     index += 1
                     self.listbox.delete(index)
@@ -85,7 +85,7 @@ class BitFlyer(Thread):
                     for i in range(BitFlyer.N):
                         a = str(ret['bids'][i]['size'])
                         a += '0' * (8 - len(a.split('.')[-1]))
-                        content =  ('' if i + 1 > 9 else '0') + str(i + 1) + '.' + ('_' * 12) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (16 - len(a))) + a
+                        content =  ('' if i + 1 > 9 else '0') + str(i + 1) + '.' + ('_' * 13) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (15 - len(a))) + a
                         self.listbox.insert(index, content)
                         index += 1
                         self.listbox.delete(index)
