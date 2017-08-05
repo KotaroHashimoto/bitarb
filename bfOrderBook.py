@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import pybitflyer
 from json import loads, dump
 from datetime import datetime
@@ -33,7 +32,6 @@ class BitFlyer(Thread):
         Thread.__init__(self)
     
         self.name = 'biyFlyer'
-        self.reset()
 
         self.scrollbar = Scrollbar(root)
         self.listbox = Listbox(root, yscrollcommand = self.scrollbar.set, width = 0)
@@ -42,15 +40,22 @@ class BitFlyer(Thread):
         self.scrollbar.pack(side=RIGHT, fill=Y)
         self.scrollbar.config(command = self.listbox.yview)
 
+        self.reset()
+
     def reset(self):
         BitFlyer.api = pybitflyer.API()
+
+        self.listbox.delete(0, END)
+                    
+        for i in range(1 + 2 * BitFlyer.N):
+            self.listbox.insert(END, '')
+
+        self.listbox.see(BitFlyer.N)
 
     def getOrderBook(self):
         return BitFlyer.api.board(product_code = 'FX_BTC_JPY')
 
     def run(self):
-
-        first = True
 
         while True:
             try:
@@ -58,33 +63,33 @@ class BitFlyer(Thread):
                     ret = self.getOrderBook()
 
                     barpos = self.scrollbar.get()[0]
-
-                    self.listbox.delete(0, END)
+                    index = 0
 
                     for i in range(BitFlyer.N):
                         b = str(ret['asks'][BitFlyer.N - 1 - i]['size'])
                         b += '0' * (8 - len(b.split('.')[-1]))
                         content = b + ('_' * (15 - len(b))) + str(ret['asks'][BitFlyer.N - 1 - i]['price']).split('.')[0] + ('_' * 13) + ('.' if BitFlyer.N - i > 9 else '.0') + str(BitFlyer.N - i)
-                        self.listbox.insert(END, content)
+                        self.listbox.insert(index, content)
+                        index += 1
+                        self.listbox.delete(index)
 
-                    content = '00.' + ('_' * 13) + str(ret['mid_price']).split('.')[0] + ('_' * 13) + '.00'
-                    self.listbox.insert(END, content)
+                    content = '00.' + ('_' * 12) + str(ret['mid_price']).split('.')[0] + ('_' * 12) + '.00'
+                    self.listbox.insert(index, content)
+                    index += 1
+                    self.listbox.delete(index)
 
                     for i in range(BitFlyer.N):
                         a = str(ret['bids'][i]['size'])
                         a += '0' * (8 - len(a.split('.')[-1]))
-                        content =  ('' if i + 1 > 9 else '0') + str(i + 1) + '.' + ('_' * 13) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (15 - len(a))) + a
-                        self.listbox.insert(END, content)
+                        content =  ('' if i + 1 > 9 else '0') + str(i + 1) + '.' + ('_' * 12) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (16 - len(a))) + a
+                        self.listbox.insert(index, content)
+                        index += 1
+                        self.listbox.delete(index)
 
                     self.listbox.yview_moveto(barpos)
 
-                    if first:
-                        self.listbox.see(BitFlyer.N)
-                        first = False
-
                 else:
                     self.reset()
-                    first = True
 
                 sleep(Window.PERIOD)
 
