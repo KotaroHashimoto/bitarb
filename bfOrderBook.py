@@ -71,7 +71,7 @@ class BitFlyer(Thread):
                         bsp = b.split('.')
                         b = (len(bsp[0]) - 1) * '_' + b
 
-                        b += '0' * (8 - len(bsp[-1]) - len(bsp[0] + 1))
+                        b += '0' * (8 - len(bsp[-1]) - len(bsp[0]) + 1)
                         content = b + ('_' * (15 - len(b))) + str(ret['asks'][BitFlyer.N - 1 - i]['price']).split('.')[0] + ('_' * 13) + ('.' if BitFlyer.N - i > 9 else '.0') + str(BitFlyer.N - i)
                         self.listbox.insert(index, content)
                         index += 1
