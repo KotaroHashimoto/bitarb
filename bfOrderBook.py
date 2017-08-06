@@ -25,7 +25,7 @@ else:
 
 class BitFlyer(Thread):
     
-    N = 10000
+    N = 256
     api = None
 
     def __init__(self, root):
@@ -47,17 +47,17 @@ class BitFlyer(Thread):
 
         self.listbox.delete(0, END)
 
-        ret = self.getOrderBook()
+        self.ret = self.getOrderBook()
 
-        for i in range(BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])):
+        for i in range(BitFlyer.N if BitFlyer.N < len(self.ret['asks']) else len(self.ret['asks'])):
             self.listbox.insert(END, '')
 
-        for i in range(BitFlyer.N if BitFlyer.N < len(ret['bids']) else len(ret['bids'])):
+        for i in range(BitFlyer.N if BitFlyer.N < len(self.ret['bids']) else len(self.ret['bids'])):
             self.listbox.insert(END, '')
 
         self.listbox.insert(END, '')
 
-        self.listbox.see((BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])) - 3)
+        self.listbox.see((BitFlyer.N if BitFlyer.N < len(self.ret['asks']) else len(self.ret['asks'])) - 3)
 
     def getOrderBook(self):
         return BitFlyer.api.board(product_code = 'FX_BTC_JPY')
@@ -67,39 +67,49 @@ class BitFlyer(Thread):
         while True:
             try:
                 if BitFlyer.api.gethealth(product_code = 'FX_BTC_JPY')['status'] != 'STOP':
-                    ret = self.getOrderBook()
 
-                    barpos = self.scrollbar.get()[0]
+                    if 2000 < BitFlyer.N:
+                        preNum = len(self.ret['asks']) + len(self.ret['bids']) + 1
+                        barpos = len(self.ret['asks']) - round(self.scrollbar.get()[0] * preNum)
+                    else:
+                        barpos = self.scrollbar.get()[0]
+
+                    self.ret = self.getOrderBook()
                     index = 0
 
-                    r = BitFlyer.N if BitFlyer.N < len(ret['asks']) else len(ret['asks'])
+                    r = BitFlyer.N if BitFlyer.N < len(self.ret['asks']) else len(self.ret['asks'])
                     for i in range(r):
-                        b = str(ret['asks'][r - 1 - i]['size'])
+                        b = str(self.ret['asks'][r - 1 - i]['size'])
 
                         bsp = b.split('.')
                         b = (3 - len(bsp[0])) * '_' + b
 
                         b += '0' * (8 - len(bsp[-1]))
-                        content = b + ('_' * (16 - len(b))) + str(ret['asks'][r - 1 - i]['price']).split('.')[0] + ('_' * 12) + '.' + ((3 - len(str(r - i))) * '0') + str(r - i)
+                        content = b + ('_' * (16 - len(b))) + str(self.ret['asks'][r - 1 - i]['price']).split('.')[0] + ('_' * 12) + '.' + ((3 - len(str(r - i))) * '0') + str(r - i)
                         self.listbox.insert(index, content)
                         index += 1
                         self.listbox.delete(index)
 
-                    content = '000.' + ('_' * 12) + str(ret['mid_price']).split('.')[0] + ('_' * 11) + '.000'
+                    content = '000.' + ('_' * 12) + str(self.ret['mid_price']).split('.')[0] + ('_' * 11) + '.000'
                     self.listbox.insert(index, content)
                     index += 1
                     self.listbox.delete(index)
 
-                    r = BitFlyer.N if BitFlyer.N < len(ret['bids']) else len(ret['bids'])
+                    r = BitFlyer.N if BitFlyer.N < len(self.ret['bids']) else len(self.ret['bids'])
                     for i in range(r):
-                        a = str(ret['bids'][i]['size'])
+                        a = str(self.ret['bids'][i]['size'])
                         a += '0' * (8 - len(a.split('.')[-1]))
-                        content =  ('0' * (3 - len(str(i + 1)))) + str(i + 1) + '.' + ('_' * 13) + str(ret['bids'][i]['price']).split('.')[0] + ('_' * (15 - len(a))) + a
+                        content =  ('0' * (3 - len(str(i + 1)))) + str(i + 1) + '.' + ('_' * 13) + str(self.ret['bids'][i]['price']).split('.')[0] + ('_' * (15 - len(a))) + a
                         self.listbox.insert(index, content)
                         index += 1
                         self.listbox.delete(index)
 
-                    self.listbox.yview_moveto(barpos)
+                    if 2000 < BitFlyer.N:
+                        total = len(self.ret['asks']) + len(self.ret['bids']) + 1
+                        pos = len(self.ret['asks']) - barpos
+                        self.listbox.yview_moveto(float(pos) / float(total))
+                    else:
+                        self.listbox.yview_moveto(barpos)
 
                 else:
                     self.reset()
