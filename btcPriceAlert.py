@@ -55,6 +55,7 @@ if __name__ == '__main__':
         Exchange('Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         Exchange('coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
         Exchange('Quoine JPY', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
+        Exchange('BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'sell', 'buy'), \
         ]
 
     while True:
