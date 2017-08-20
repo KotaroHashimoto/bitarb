@@ -9,7 +9,7 @@ from json import loads, dump
 import ssl
 import requests
 import os
-from sys import version_info, exit
+from sys import version_info, exit, argv
 
 if version_info.major == 2 and version_info.minor == 7:
     from urllib2 import urlopen, Request
@@ -87,7 +87,7 @@ def b(amount, p = 0):
     res = api.sendchildorder(product_code = pcode, \
                              child_order_type = ('MARKET' if p == 0 else 'LIMIT'), \
                              side = 'BUY', \
-                             price = p * 10000.0, \
+                             price = p, \
                              size = amount)
 
     if 'child_order_acceptance_id' in res:
@@ -101,7 +101,7 @@ def s(amount, p = 0):
     res = api.sendchildorder(product_code = pcode, \
                              child_order_type = ('MARKET' if p == 0 else 'LIMIT'), \
                              side = 'SELL', \
-                             price = p * 10000.0, \
+                             price = p, \
                              size = amount)
 
     if 'child_order_acceptance_id' in res:
@@ -160,3 +160,33 @@ def hl():
     res = api.gethealth(product_code = pcode)
     print('BitFlyer server status is', res['status'])
 
+
+
+if __name__ == '__main__':
+
+    argv[2:] = [float(v) if '.' in v else int(v) for v in argv[2:]]
+
+    if argv[1] == 'ob':
+        ob(*tuple(argv[2:]))
+    elif argv[1] == 'tc':
+        tc()
+    elif argv[1] == 'bl':
+        bl()
+    elif argv[1] == 'cl':
+        cl()
+    elif argv[1] == 'b':
+        b(*tuple(argv[2:]))
+    elif argv[1] == 's':
+        s(*tuple(argv[2:]))
+    elif argv[1] == 'oo':
+        oo()
+    elif argv[1] == 'cc':
+        cc(*tuple(argv[2:]))
+    elif argv[1] == 'ca':
+        ca()
+    elif argv[1] == 'ps':
+        ps()
+    elif argv[1] == 'hl':
+        hl()
+    else:
+        print('command', argv[1], 'doesn\'t exist.')
