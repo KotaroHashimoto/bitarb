@@ -151,7 +151,7 @@ class Exchange(Thread):
 
                 if self.name == 'Zaif':
                     XemExchange.ZAIFBTCJPY = float(data[self.last])
-               
+
                 self.ask = int(data[self.sask])
                 self.bid = int(data[self.sbid])
         
@@ -166,7 +166,8 @@ class Exchange(Thread):
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
                 sleep(Window.PERIOD)
 
-            except:
+            except Exception as e:
+                print('Exchange ', e, ', ', self.name)
                 self.label.configure(fg = 'gray')
                 sleep(10)
                 self.label.configure(fg = 'black')
@@ -394,12 +395,19 @@ class EthereumExchange(ForExchange):
 class XemExchange(Exchange):
 
     POLOXEMBTC = 0
+    TREXXEMBTC = 0
     ZAIFBTCJPY = {}
 
     ZXEM_ASK = 0
     PXEM_ASK = 0
+    TXEM_ASK = 0
     ZXEM_BID = 0
     PXEM_BID = 0
+    TXEM_BID = 0
+
+    xstr = None
+    txstr = None
+    pstr = None
 
     def __init__(self, root, name, url, last, sask, sbid):    
 
@@ -408,21 +416,31 @@ class XemExchange(Exchange):
 
         Exchange.__init__(self, root, name, url, last, sask, sbid)
 
-        if name == 'Poloniex XEM':
-            self.xstr = StringVar()
-            self.xstr.set('')
-            self.xlabel = Label(root, textvariable = self.xstr, font = (Window.FONT, Window.FSIZE))
-            self.xlabel.pack()
+        if name == 'Bittrex XEM':
+            XemExchange.xstr = StringVar()
+            XemExchange.xstr.set('')
+            XemExchange.xlabel = Label(root, textvariable = XemExchange.xstr, font = (Window.FONT, Window.FSIZE))
+            XemExchange.xlabel.pack()
 
-            self.pstr = StringVar()
-            self.pstr.set('')
-            self.plabel = Label(root, textvariable = self.pstr, font = (Window.FONT, Window.FSIZE))
-            self.plabel.pack()
+            self.txstr = StringVar()
+            self.txstr.set('')
+            self.txlabel = Label(root, textvariable = self.txstr, font = (Window.FONT, Window.FSIZE))
+            self.txlabel.pack()
 
-            self.zstr = StringVar()
-            self.zstr.set('')
-            self.zlabel = Label(root, textvariable = self.zstr, font = (Window.FONT, Window.FSIZE))
-            self.zlabel.pack()
+            XemExchange.pstr = StringVar()
+            XemExchange.pstr.set('')
+            XemExchange.plabel = Label(root, textvariable = XemExchange.pstr, font = (Window.FONT, Window.FSIZE))
+            XemExchange.plabel.pack()
+
+            self.tstr = StringVar()
+            self.tstr.set('')
+            self.tlabel = Label(root, textvariable = self.tstr, font = (Window.FONT, Window.FSIZE))
+            self.tlabel.pack()
+
+            XemExchange.zstr = StringVar()
+            XemExchange.zstr.set('')
+            XemExchange.zlabel = Label(root, textvariable = XemExchange.zstr, font = (Window.FONT, Window.FSIZE))
+            XemExchange.zlabel.pack()
 
 
     def run(self):
@@ -439,12 +457,24 @@ class XemExchange(Exchange):
                     XemExchange.ZXEM_ASK = self.ask
                     XemExchange.ZXEM_BID = self.bid
 
-                elif self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY:
+                elif self.name == 'Bittrex XEM':
+                    data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
+                    XemExchange.TREXXEMBTC = data['result']
+
+                if self.name == 'Poloniex XEM' and XemExchange.ZAIFBTCJPY and XemExchange.POLOXEMBTC:
                     self.ask = float(XemExchange.POLOXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
                     self.bid = float(XemExchange.POLOXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
                     up = float(XemExchange.POLOXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
                     XemExchange.PXEM_ASK = self.ask
                     XemExchange.PXEM_BID = self.bid
+
+                elif self.name == 'Bittrex XEM' and XemExchange.ZAIFBTCJPY and XemExchange.TREXXEMBTC:
+                    self.ask = float(XemExchange.TREXXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
+                    self.bid = float(XemExchange.TREXXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
+                    up = float(XemExchange.TREXXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
+                    XemExchange.TXEM_ASK = self.ask
+                    XemExchange.TXEM_BID = self.bid
+
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
@@ -473,13 +503,28 @@ class XemExchange(Exchange):
                     else:
                         v = 0
 
-                    self.xstr.set('Zaif XEM / Poloniex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
-                    self.pstr.set('Poloniex XEM/BTC last \t' + XemExchange.POLOXEMBTC[self.last])
-                    self.zstr.set('Zaif BTC/JPY last \t\t' + str(XemExchange.ZAIFBTCJPY))
+                    XemExchange.xstr.set('Zaif XEM / Poloniex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
+                    XemExchange.pstr.set('Poloniex XEM/BTC last \t' + XemExchange.POLOXEMBTC[self.last])
+                    XemExchange.zstr.set('Zaif BTC/JPY last \t\t' + str(XemExchange.ZAIFBTCJPY))
+
+                elif self.name == 'Bittrex XEM' and 0 < XemExchange.TXEM_BID and 0 < XemExchange.TXEM_ASK:
+
+                    if XemExchange.TXEM_ASK < XemExchange.ZXEM_BID:
+                        v = round(100 * (XemExchange.ZXEM_BID / XemExchange.TXEM_ASK - 1), 4)
+                    
+                    elif XemExchange.ZXEM_ASK < XemExchange.TXEM_BID:
+                        v = round(100 * (XemExchange.ZXEM_ASK / XemExchange.TXEM_BID - 1), 4)
+
+                    else:
+                        v = 0
+
+                    self.txstr.set('Zaif XEM / Bittrex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
+                    self.tstr.set('Bittrex XEM/BTC last \t' + str(format(XemExchange.TREXXEMBTC[self.last], '.8f')))
 
                 sleep(Window.PERIOD)
 
             except Exception as e:
+                print('Xem Exchange ', e, ', ', self.name)
                 self.label.configure(fg = 'gray')
                 sleep(10)
                 self.label.configure(fg = 'black')
@@ -527,6 +572,7 @@ if __name__ == '__main__':
     xem = [ \
         XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
         XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
+        XemExchange(window.root, 'Bittrex XEM', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-xem', 'Last', 'Ask', 'Bid'), \
         ] 
 
     eth = [ \
