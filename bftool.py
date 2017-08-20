@@ -23,7 +23,6 @@ else:
 api = pybitflyer.API(api_key = API_KEY, api_secret = API_SECRET)
 pcode = 'FX_BTC_JPY'
 
-
 def ob(p = 0, w = 10):
     res = api.board(product_code = pcode)
     z = False
@@ -83,12 +82,12 @@ def cl():
     print('証拠金維持率　(円): ' + str(res['keep_rate']))
 
 
-def buy(amount, p = 0):
+def b(amount, p = 0):
 
     res = api.sendchildorder(product_code = pcode, \
                              child_order_type = ('MARKET' if p == 0 else 'LIMIT'), \
                              side = 'BUY', \
-                             price = p, \
+                             price = p * 10000.0, \
                              size = amount)
 
     if 'child_order_acceptance_id' in res:
@@ -97,18 +96,18 @@ def buy(amount, p = 0):
         print('Buy order failed. ' + str(res))
 
 
-def sell(amount, p = 0):
+def s(amount, p = 0):
 
     res = api.sendchildorder(product_code = pcode, \
                              child_order_type = ('MARKET' if p == 0 else 'LIMIT'), \
                              side = 'SELL', \
-                             price = p, \
+                             price = p * 10000.0, \
                              size = amount)
 
     if 'child_order_acceptance_id' in res:
-        print('Buy order sent. ID = ' + res['child_order_acceptance_id'])
+        print('Sell order sent. ID = ' + res['child_order_acceptance_id'])
     else:
-        print('Buy order failed. ' + str(res))
+        print('Sell order failed. ' + str(res))
 
 
 def oo():
@@ -117,8 +116,11 @@ def oo():
 
     i = 1
     for c in res:
-        print((' ' if i < 10 else '') + str(i) + ': ' + c['child_order_type'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']))
+        print((' ' if i < 10 else '') + str(i) + ': ' + c['side'] + ' ' + c['child_order_type'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']))
         i += 1
+
+    if not res:
+        print('No open order')
 
 
 def cc(i):
@@ -128,7 +130,7 @@ def cc(i):
     for c in res:
         if o == i:
             res = api.cancelchildorder(product_code = pcode, child_order_id = c['child_order_id'])
-            print('Cancelled: ' + c['child_order_type'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']))
+            print('Cancelled: ' + c['side'] + ' ' + c['child_order_type'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']))
             return
 
         o += 1
@@ -142,10 +144,19 @@ def ca():
     print(res)
 
 
-def pos():
+def ps():
 
     res = api.getpositions(product_code = pcode)
 
     for c in res:
         print(c['side'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']) + ', pnl = ' + ('+' if 0 < c['pnl'] else '') + str(c['pnl']) + ', swap = ' + str(c['swap_point_accumulate']))
+
+    if not res:
+        print('No position')
+
+
+def hl():
+
+    res = api.gethealth(product_code = pcode)
+    print('BitFlyer server status is', res['status'])
 
