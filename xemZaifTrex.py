@@ -108,8 +108,8 @@ class Trex:
 
         res = Trex.public.get_orderbook('BTC-XEM', 'both')['result']
 
-        self.ask = [res['sell']['Rate'], res['sell']['Quantity']]
-        self.bid = [res['buy']['Rate'], res['buy']['Quantity']]
+        self.ask = [res['sell'][0]['Rate'], res['sell'][0]['Quantity']]
+        self.bid = [res['buy'][0]['Rate'], res['buy'][0]['Quantity']]
 
         return 'Trex: ask' + str(self.ask) + ', bid' + str(self.bid)
 
