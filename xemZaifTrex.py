@@ -114,10 +114,10 @@ class Trex:
         return 'Trex: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.sell('BTC_XEM', round(self.bid[0] * Sell_Rate_Ratio, 8), am)
+        return self.private.sell_limit('BTC-XEM', am, round(self.bid[0] * Sell_Rate_Ratio, 8))
 
     def buy(self, am):
-        return self.private.buy('BTC_XEM', round(self.ask[0] * Buy_Rate_Ratio, 8), am)
+        return self.private.buy_limit('BTC-XEM', am, round(self.ask[0] * Buy_Rate_Ratio, 8))
 
 
 class Position:
