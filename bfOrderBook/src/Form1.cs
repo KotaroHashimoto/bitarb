@@ -224,5 +224,11 @@ namespace bfOrderBook
         {
             await getOrderBook();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            listBox1.SelectedIndex = SMAX;
+            listBox1.TopIndex = listBox1.SelectedIndex - 20;
+        }
     }
 }
