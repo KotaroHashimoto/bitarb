@@ -17,6 +17,8 @@ namespace bfOrderBook
     {
 
         BitflyerClient client;
+        Board board;
+
         bool mask = false;
         int SMAX = 0;
 
@@ -49,7 +51,6 @@ namespace bfOrderBook
             List<string> orderBookA = null;
             List<string> orderBookB = null;
             List<string> orderBook = null;
-            Board board;
 
             bool first = true;
 
@@ -185,19 +186,36 @@ namespace bfOrderBook
 
             if (Int32.TryParse(textBox1.Text, out int numValue))
             {
-                if(0 < numValue && numValue < SMAX)
+                if(board.MiddlePrice == numValue)
                 {
-                    listBox1.SelectedIndex = SMAX - numValue;
-                    listBox1.TopIndex = listBox1.SelectedIndex - 20;
-                }
-                else if (-1 * SMAX < numValue && numValue < 0)
-                {
-                    listBox1.SelectedIndex = SMAX + (-1 * numValue);
-                    listBox1.TopIndex = listBox1.SelectedIndex - 20;
-                }
-                else if(numValue == 0) {
                     listBox1.SelectedIndex = SMAX;
                     listBox1.TopIndex = listBox1.SelectedIndex - 20;
+                }
+                else if (board.MiddlePrice < numValue)
+                {
+                    for(int i = 0; i < board.Asks.Count; i++)
+                    {
+                        if(numValue < board.Asks[i].Price)
+                        {
+                            listBox1.SelectedIndex = SMAX - i;
+                            listBox1.TopIndex = listBox1.SelectedIndex - 20;
+
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < board.Bids.Count; i++)
+                    {
+                        if (board.Bids[i].Price < numValue)
+                        {
+                            listBox1.SelectedIndex = SMAX + i;
+                            listBox1.TopIndex = listBox1.SelectedIndex - 20;
+
+                            break;
+                        }
+                    }
                 }
             }
         }
