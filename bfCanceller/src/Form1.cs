@@ -176,7 +176,7 @@ namespace bfCanceller
             String secret = null;
 
             try { 
-                System.IO.StreamReader file = new System.IO.StreamReader("C:\\ProgramData\\apikey.txt");
+                System.IO.StreamReader file = new System.IO.StreamReader("C:\\apikey.txt");
 
                 while ((line = file.ReadLine()) != null)
                 {
