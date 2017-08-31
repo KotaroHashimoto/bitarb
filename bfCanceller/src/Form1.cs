@@ -189,8 +189,8 @@ namespace bfCanceller
         private async void Form1_Load(object sender, EventArgs e)
         {
 
-            String key = "";  // Properties.Settings.Default.key;
-            String secret = ""; // Properties.Settings.Default.key;
+            String key = Properties.Settings.Default.key;
+            String secret = Properties.Settings.Default.secret;
 
             if (key != null && secret != null && 0 < key.Length && 0 < secret.Length)
             {
@@ -295,6 +295,15 @@ namespace bfCanceller
             secret = textBox1.Text;
 
             return dialogResult;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.key = "";
+            Properties.Settings.Default.secret = "";
+            Properties.Settings.Default.Save();
+
+            Application.Exit();
         }
     }
 }
