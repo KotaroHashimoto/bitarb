@@ -104,7 +104,7 @@ namespace bfCanceller
                         string price = oo.Price.ToString();
                         string date = oo.Date.ToLongTimeString() + ss[1] + oo.Date.ToLongDateString();
 
-                        orderList.Add(ss[5 - side.Length] + side + ss[5 - amount[0].Length] + amount[0].Length +
+                        orderList.Add(ss[5 - side.Length] + side + ss[5 - amount[0].Length] + amount[0] +
                             (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + " BTC at " +
                             ss[7 - price.Length] + price + ss[3] + date);
                     }
@@ -211,7 +211,8 @@ namespace bfCanceller
                 Properties.Settings.Default.secret = secret;
                 Properties.Settings.Default.Save();
 
-                client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
+//                client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
+                client = new BitflyerClient(key, secret, ProductCode.BTC_JPY);
                 await getOpenOrders();
             }
             else
@@ -304,6 +305,46 @@ namespace bfCanceller
             Properties.Settings.Default.Save();
 
             Application.Exit();
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            Console.WriteLine("hogehoge!");
+
+            e.DrawBackground();
+
+            if (-1 < e.Index && e.Index < listBox1.Items.Count)
+            {
+                Brush b = null;
+                string txt = ((ListBox)sender).Items[e.Index].ToString();
+
+                Console.WriteLine(txt);
+
+                if ((e.State & DrawItemState.Selected) != DrawItemState.Selected)
+                {
+                    if (txt.Contains("SELL"))
+                    {
+                        b = new SolidBrush(Color.Blue);
+                    }
+                    else if (txt.Contains("BUY"))
+                    {
+                        b = new SolidBrush(Color.Red);
+                    }
+                    else
+                    {
+                        b = new SolidBrush(e.ForeColor);
+                    }
+                }
+                else
+                {
+                    b = new SolidBrush(e.ForeColor);
+                }
+
+                e.Graphics.DrawString(txt, e.Font, b, e.Bounds);
+                b.Dispose();
+            }
+
+            e.DrawFocusRectangle();
         }
     }
 }
