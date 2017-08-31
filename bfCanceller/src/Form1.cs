@@ -79,6 +79,10 @@ namespace bfCanceller
                     listBox1.Items.Add(ex);
                     listBox1.Items.Add("Connecting to BitFlyer server ...");
 
+                    Properties.Settings.Default.key = "";
+                    Properties.Settings.Default.secret = "";
+                    Properties.Settings.Default.Save();
+
                     await Task.Delay(1000);
                     continue;
                 }
@@ -116,8 +120,16 @@ namespace bfCanceller
                     listBox1.EndUpdate();
                 }
 
-                listBox1.SelectedIndex = (foc < orders.Count) ? foc : 0;
-                listBox1.TopIndex = (pos < orders.Count) ? pos : 0;
+                if (orders == null)
+                {
+                    // do nothing
+                }
+                else 
+                {
+                    listBox1.SelectedIndex = (foc < orders.Count) ? foc : 0;
+                    listBox1.TopIndex = (pos < orders.Count) ? pos : 0;
+                }
+
 
                 await Task.Delay(1000);
             }
@@ -163,6 +175,10 @@ namespace bfCanceller
                     listBox1.Items.Add(ex);
                     listBox1.Items.Add("Failed to cancel order.");
 
+                    Properties.Settings.Default.key = "";
+                    Properties.Settings.Default.secret = "";
+                    Properties.Settings.Default.Save();
+
                     await Task.Delay(1000);
                 }
 
@@ -173,27 +189,59 @@ namespace bfCanceller
         private async void Form1_Load(object sender, EventArgs e)
         {
 
-            String key = "";
-            String secret = "";
+            String key = "";  // Properties.Settings.Default.key;
+            String secret = ""; // Properties.Settings.Default.key;
 
-            if (InputBox(ref key, ref secret) != DialogResult.OK)
+            if (key != null && secret != null && 0 < key.Length && 0 < secret.Length)
             {
+                // use stored value
+            }
+            else if (InputBox(ref key, ref secret) != DialogResult.OK)
+            {
+                Properties.Settings.Default.key = "";
+                Properties.Settings.Default.secret = "";
+                Properties.Settings.Default.Save();
+
                 listBox1.Items.Add("Failed to read API key.");
             }
-            else if (key != null && secret != null)
+
+            if (key != null && secret != null && 0 < key.Length && 0 < secret.Length)
             {
+                Properties.Settings.Default.key = key;
+                Properties.Settings.Default.secret = secret;
+                Properties.Settings.Default.Save();
+
                 client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
                 await getOpenOrders();
             }
             else
             {
+                Properties.Settings.Default.key = "";
+                Properties.Settings.Default.secret = "";
+                Properties.Settings.Default.Save();
+
                 listBox1.Items.Add("Failed to read API key.");
             }
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            await client.CancelAllOrders();
+            try
+            {
+                await client.CancelAllOrders();
+            }
+            catch (Exception ex)
+            {
+                listBox1.DataSource = null;
+                listBox1.Items.Add(ex);
+                listBox1.Items.Add("Failed to cancel all orders.");
+
+                Properties.Settings.Default.key = "";
+                Properties.Settings.Default.secret = "";
+                Properties.Settings.Default.Save();
+
+                await Task.Delay(1000);
+            }
         }
 
 
@@ -248,6 +296,5 @@ namespace bfCanceller
 
             return dialogResult;
         }
-
     }
 }
