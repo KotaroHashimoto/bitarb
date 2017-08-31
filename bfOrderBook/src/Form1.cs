@@ -269,6 +269,7 @@ namespace bfOrderBook
 
         private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
+
             e.DrawBackground();
 
             if (-1 < e.Index)
@@ -285,11 +286,15 @@ namespace bfOrderBook
                         Brush bb = null;
                         if (0 < amounts[e.Index])
                         {
-                            bb = new SolidBrush(Color.LavenderBlush);
+                            bb = new SolidBrush(button5.ForeColor);
                         }
                         else if (amounts[e.Index] < 0)
                         {
-                            bb = new SolidBrush(Color.AliceBlue);
+                            bb = new SolidBrush(button4.ForeColor);
+                        }
+                        else if (amounts[e.Index] == 0)
+                        {
+                            bb = new SolidBrush(button3.ForeColor);
                         }
                         if (bb != null)
                         {
@@ -299,24 +304,24 @@ namespace bfOrderBook
 
                         if (100.0 <= a)
                         {
-                            b = new SolidBrush(Color.Red);
+                            b = new SolidBrush(button8.ForeColor);
                         }
                         else if (10.0 <= a)
                         {
-                            b = new SolidBrush(Color.Green);
+                            b = new SolidBrush(button7.ForeColor);
                         }
                         else if (1.0 <= a)
                         {
-                            b = new SolidBrush(Color.Blue);
+                            b = new SolidBrush(button6.ForeColor);
                         }
                         else
                         {
-                            b = new SolidBrush(e.ForeColor);
+                            b = new SolidBrush(button2.ForeColor);
                         }
                     }
                     else
                     {
-                        b = new SolidBrush(e.ForeColor);
+                        b = new SolidBrush(button2.ForeColor);
                     }
 
                     e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, b, e.Bounds);
@@ -324,12 +329,117 @@ namespace bfOrderBook
                 }
                 else
                 {
-                    e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds);
+                    e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, new SolidBrush(button2.ForeColor), e.Bounds);
                 }
 
             }
 
             e.DrawFocusRectangle();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button2.ForeColor;
+
+            if(cd.ShowDialog() == DialogResult.OK)
+            {
+                button2.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.fore = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button3.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button3.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.back = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button4.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button4.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.asks = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button5.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button5.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.bids = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button6.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button6.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.one = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button7.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button7.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.two = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button8.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button8.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.three = cd.Color;
+            Properties.Settings.Default.Save();
         }
     }
 }
