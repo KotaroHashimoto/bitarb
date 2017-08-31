@@ -18,6 +18,7 @@ namespace bfOrderBook
 
         BitflyerClient client;
         Board board;
+        List<double> amounts;
 
         bool mask = false;
         int SMAX = 0;
@@ -40,7 +41,7 @@ namespace bfOrderBook
 
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
 
             client = new BitflyerClient("", "", ProductCode.FX_BTC_JPY);
         }
@@ -51,6 +52,7 @@ namespace bfOrderBook
             List<string> orderBookA = null;
             List<string> orderBookB = null;
             List<string> orderBook = null;
+            amounts = null;
 
             bool first = true;
 
@@ -70,6 +72,7 @@ namespace bfOrderBook
                         orderBook = orderBookA;
                     }
                     orderBook.Clear();
+                    amounts.Clear();
                 }
 
                 try
@@ -78,9 +81,13 @@ namespace bfOrderBook
                 }
                 catch (Exception ex)
                 {
+                    listBox1.BeginUpdate();
                     listBox1.DataSource = null;
                     listBox1.Items.Add("Connecting to BitFlyer server ...");
                     listBox1.Items.Add(ex);
+                    listBox1.EndUpdate();
+
+                    Console.WriteLine(ex);
 
                     first = true;
 
@@ -95,6 +102,8 @@ namespace bfOrderBook
                     orderBookA = new List<string>(SMAX * 2 + 1);
                     orderBookB = new List<string>(SMAX * 2 + 1);
                     orderBook = orderBookA;
+
+                    amounts = new List<double>(SMAX * 2 + 1);
                 }
 
 
@@ -103,6 +112,7 @@ namespace bfOrderBook
                 {
                     String index = (SMAX - i).ToString();
                     orderBook.Add(ss[4 - index.Length] + index + sc);
+                    amounts.Add(0.1);
                 }
 
                 for (int i = (0 < n ? board.Asks.Count : SMAX) - 1; 0 <= i; i--)
@@ -114,10 +124,16 @@ namespace bfOrderBook
                     orderBook.Add(ss[4 - index.Length] + index + sc +
                         ss[5 - ask[0].Length] + ask[0] + (ask.Length == 2 ? ("." + ask[1] + ss[8 - ask[1].Length]) : ss[9]) +
                         ss[9 - pr.Length] + pr);
+
+                    amounts.Add(board.Asks[i].Size);
                 }
 
+
                 String p = board.MiddlePrice.ToString();
-                orderBook.Add(s19 + ss[9 - p.Length] + p);
+                orderBook.Add(s19 + ss[9 - p.Length] + p + 
+                    ss[6] + "spread: " + Math.Round(100 * (board.Asks[0].Price - board.Bids[0].Price) / board.MiddlePrice, 5).ToString() + " %");
+                amounts.Add(0);
+
 
                 n = SMAX - board.Bids.Count;
                 for (int i = 0; i < (0 < n ? board.Bids.Count : SMAX); i++)
@@ -130,12 +146,15 @@ namespace bfOrderBook
                         ss[9 - pr.Length] + pr + ss[2] +
                         ss[5 - bid[0].Length] + bid[0] + (bid.Length == 2 ? ("." + bid[1] + ss[8 - bid[1].Length]) : ss[9]) +
                         ss[2] + sc + ss[4 - index.Length] + index);
+
+                    amounts.Add(-1 * board.Bids[i].Size);
                 }
 
                 for (int i = 0; i < n; i++)
                 {
                     String index = (board.Bids.Count + i + 1).ToString();
                     orderBook.Add(s46 + sc + ss[4 - index.Length] + index);
+                    amounts.Add(-0.1);
                 }
 
 
@@ -144,7 +163,15 @@ namespace bfOrderBook
 
                 if (!mask)
                 {
+                    listBox1.BeginUpdate();
                     listBox1.DataSource = orderBook;
+                    listBox1.EndUpdate();
+                }
+
+                if (listBox1.DataSource == null)
+                {
+                    await Task.Delay(1000);
+                    continue;
                 }
 
                 listBox1.SelectedIndex = foc;
@@ -183,19 +210,23 @@ namespace bfOrderBook
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            if(listBox1.DataSource == null)
+            {
+                return;
+            }
 
             if (Int32.TryParse(textBox1.Text, out int numValue))
             {
-                if(board.MiddlePrice == numValue)
+                if (board.MiddlePrice == numValue)
                 {
                     listBox1.SelectedIndex = SMAX;
                     listBox1.TopIndex = listBox1.SelectedIndex - 20;
                 }
                 else if (board.MiddlePrice < numValue)
                 {
-                    for(int i = 0; i < board.Asks.Count; i++)
+                    for (int i = 0; i < board.Asks.Count; i++)
                     {
-                        if(numValue < board.Asks[i].Price)
+                        if (numValue < board.Asks[i].Price)
                         {
                             listBox1.SelectedIndex = SMAX - i;
                             listBox1.TopIndex = listBox1.SelectedIndex - 20;
@@ -227,8 +258,78 @@ namespace bfOrderBook
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (listBox1.DataSource == null)
+            {
+                return;
+            }
+
             listBox1.SelectedIndex = SMAX;
             listBox1.TopIndex = listBox1.SelectedIndex - 20;
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+
+            if (-1 < e.Index)
+            {
+                if (amounts != null && e.Index < amounts.Count) {
+
+                    Brush b = null;
+
+                    double a = Math.Abs(amounts[e.Index]);
+
+                    if ((e.State & DrawItemState.Selected) != DrawItemState.Selected)
+                    {
+
+                        Brush bb = null;
+                        if (0 < amounts[e.Index])
+                        {
+                            bb = new SolidBrush(Color.LavenderBlush);
+                        }
+                        else if (amounts[e.Index] < 0)
+                        {
+                            bb = new SolidBrush(Color.AliceBlue);
+                        }
+                        if (bb != null)
+                        {
+                            e.Graphics.FillRectangle(bb, e.Bounds);
+                            bb.Dispose();
+                        }
+
+                        if (100.0 <= a)
+                        {
+                            b = new SolidBrush(Color.Red);
+                        }
+                        else if (10.0 <= a)
+                        {
+                            b = new SolidBrush(Color.Green);
+                        }
+                        else if (1.0 <= a)
+                        {
+                            b = new SolidBrush(Color.Blue);
+                        }
+                        else
+                        {
+                            b = new SolidBrush(e.ForeColor);
+                        }
+                    }
+                    else
+                    {
+                        b = new SolidBrush(e.ForeColor);
+                    }
+
+                    e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, b, e.Bounds);
+                    b.Dispose();
+                }
+                else
+                {
+                    e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds);
+                }
+
+            }
+
+            e.DrawFocusRectangle();
         }
     }
 }
