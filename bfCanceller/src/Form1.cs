@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using BitflyerApi;
-using System.Net;
+
 
 namespace bfCanceller
 {
@@ -111,7 +111,9 @@ namespace bfCanceller
 
                 if (!mask)
                 {
+                    listBox1.BeginUpdate();
                     listBox1.DataSource = orderList;
+                    listBox1.EndUpdate();
                 }
 
                 listBox1.SelectedIndex = (foc < orders.Count) ? foc : 0;
@@ -171,37 +173,14 @@ namespace bfCanceller
         private async void Form1_Load(object sender, EventArgs e)
         {
 
-            String line = null;
-            String key = null;
-            String secret = null;
+            String key = "";
+            String secret = "";
 
-            try { 
-                System.IO.StreamReader file = new System.IO.StreamReader("C:\\apikey.txt");
-
-                while ((line = file.ReadLine()) != null)
-                {
-                    if (key == null)
-                    {
-                        key = line;
-                    }
-                    else if (secret == null)
-                    {
-                        secret = line;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                file.Close();
-            }
-            catch(Exception ex)
+            if (InputBox(ref key, ref secret) != DialogResult.OK)
             {
-                listBox1.Items.Add(ex);
+                listBox1.Items.Add("Failed to read API key.");
             }
-
-            if (key != null && secret != null)
+            else if (key != null && secret != null)
             {
                 client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
                 await getOpenOrders();
@@ -216,5 +195,59 @@ namespace bfCanceller
         {
             await client.CancelAllOrders();
         }
+
+
+        public static DialogResult InputBox(ref string key, ref string secret)
+        {
+            Form form = new Form();
+            Label label0 = new Label();
+            TextBox textBox0 = new TextBox();
+            Label label1 = new Label();
+            TextBox textBox1 = new TextBox();
+            Button buttonOk = new Button();
+            Button buttonCancel = new Button();
+
+            form.Text = "Input your BitFlyer Lightning Credential.";
+            label0.Text = "API Key";
+            textBox0.Text = key;
+            label1.Text = "API Secret";
+            textBox1.Text = secret;
+
+            buttonOk.Text = "OK";
+            buttonCancel.Text = "Cancel";
+            buttonOk.DialogResult = DialogResult.OK;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+
+            label0.SetBounds(9, 20, 372, 13);
+            textBox0.SetBounds(12, 36, 372, 20);
+            label1.SetBounds(9, 20 + 55, 372, 13);
+            textBox1.SetBounds(12, 36 + 55, 372, 20);
+            buttonOk.SetBounds(228, 72 + 55, 75, 23);
+            buttonCancel.SetBounds(309, 72 + 55, 75, 23);
+
+            label0.AutoSize = true;
+            textBox0.Anchor = textBox0.Anchor | AnchorStyles.Right;
+            label1.AutoSize = true;
+            textBox1.Anchor = textBox1.Anchor | AnchorStyles.Right;
+            buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+            form.ClientSize = new Size(396, 107 + 55);
+            form.Controls.AddRange(new Control[] { label0, textBox0, label1, textBox1, buttonOk, buttonCancel });
+            form.ClientSize = new Size(Math.Max(300, label0.Right + 10), form.ClientSize.Height);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.MinimizeBox = false;
+            form.MaximizeBox = false;
+            form.AcceptButton = buttonOk;
+            form.CancelButton = buttonCancel;
+
+            DialogResult dialogResult = form.ShowDialog();
+            key = textBox0.Text;
+            secret = textBox1.Text;
+
+            return dialogResult;
+        }
+
     }
 }
