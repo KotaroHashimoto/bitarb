@@ -49,61 +49,73 @@ namespace bfOrderBook.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("AliceBlue")]
-        public global::System.Drawing.Color asks {
-            get {
-                return ((global::System.Drawing.Color)(this["asks"]));
-            }
-            set {
-                this["asks"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LavenderBlush")]
-        public global::System.Drawing.Color bids {
-            get {
-                return ((global::System.Drawing.Color)(this["bids"]));
-            }
-            set {
-                this["bids"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
-        public global::System.Drawing.Color one {
+        public global::System.Drawing.Color a_1 {
             get {
-                return ((global::System.Drawing.Color)(this["one"]));
+                return ((global::System.Drawing.Color)(this["a_1"]));
             }
             set {
-                this["one"] = value;
+                this["a_1"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Green")]
-        public global::System.Drawing.Color two {
+        public global::System.Drawing.Color a_10 {
             get {
-                return ((global::System.Drawing.Color)(this["two"]));
+                return ((global::System.Drawing.Color)(this["a_10"]));
             }
             set {
-                this["two"] = value;
+                this["a_10"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        public global::System.Drawing.Color three {
+        public global::System.Drawing.Color a_100 {
             get {
-                return ((global::System.Drawing.Color)(this["three"]));
+                return ((global::System.Drawing.Color)(this["a_100"]));
             }
             set {
-                this["three"] = value;
+                this["a_100"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
+        public global::System.Drawing.Color b_1 {
+            get {
+                return ((global::System.Drawing.Color)(this["b_1"]));
+            }
+            set {
+                this["b_1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        public global::System.Drawing.Color b_10 {
+            get {
+                return ((global::System.Drawing.Color)(this["b_10"]));
+            }
+            set {
+                this["b_10"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
+        public global::System.Drawing.Color b_100 {
+            get {
+                return ((global::System.Drawing.Color)(this["b_100"]));
+            }
+            set {
+                this["b_100"] = value;
             }
         }
     }
