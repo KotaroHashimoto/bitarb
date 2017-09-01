@@ -32,14 +32,13 @@ namespace bfCanceller
         bool mask = false;
         bool processing = false;
         BitflyerClient client = null;
+        List<string> orderList = null;
 
         List<Order> orders = null;
 
         public Form1()
         {
             InitializeComponent();
-
-            client = new BitflyerClient("", "", ProductCode.FX_BTC_JPY);
         }
 
         async Task getOpenOrders()
@@ -47,13 +46,15 @@ namespace bfCanceller
 
             List<string> orderListA = new List<string>();
             List<string> orderListB = new List<string>();
-            List<string> orderList = orderListA;
+            orderList = orderListA;
 
             listBox1.Items.Add("Connecting to BitFlyer server ...");
 
 
             while (true)
             {
+                label1.Text = "";
+
                 if (listBox1.DataSource != null)
                 {
                     if (listBox1.DataSource.Equals(orderListA))
@@ -99,6 +100,7 @@ namespace bfCanceller
                 }
                 else
                 {
+                    int i = 0;
                     foreach (Order oo in orders)
                     {
                         string side = oo.Side.ToString();
@@ -106,7 +108,8 @@ namespace bfCanceller
                         string price = oo.Price.ToString();
                         string date = oo.Date.ToLongTimeString() + ss[1] + oo.Date.ToShortDateString();
 
-                        orderList.Add(ss[5 - side.Length] + side + ss[5 - amount[0].Length] + amount[0] +
+                        orderList.Add((++i).ToString() + ":" +
+                            ss[5 - side.Length] + side + ss[5 - amount[0].Length] + amount[0] +
                             (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + " BTC at " +
                             ss[7 - price.Length] + price + ss[3] + date);
                     }
@@ -160,7 +163,6 @@ namespace bfCanceller
 
         private async void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-
             if (!processing && orders != null)
             {
                 processing = true;
@@ -168,7 +170,14 @@ namespace bfCanceller
                 try
                 {
                     if (listBox1.SelectedIndex < orders.Count) {
+
+                        label1.Text = "Order # " + (listBox1.SelectedIndex + 1).ToString() + " cancel requesting";
                         await client.CancelOrder(orders.ElementAt(listBox1.SelectedIndex));
+                        label1.Text = "Order # " + (listBox1.SelectedIndex + 1).ToString() + " cancel accepted";
+                    }
+                    else
+                    {
+                        label1.Text = "Order # " + (listBox1.SelectedIndex + 1).ToString() + " out of range";
                     }
                 }
                 catch (Exception ex)
@@ -181,9 +190,9 @@ namespace bfCanceller
                     Properties.Settings.Default.secret = "";
                     Properties.Settings.Default.Save();
 
-                    await Task.Delay(1000);
                 }
 
+                await Task.Delay(3000);
                 processing = false;
             }
         }
@@ -230,7 +239,9 @@ namespace bfCanceller
         {
             try
             {
+                label1.Text = "Cancel all orders requesting";
                 await client.CancelAllOrders();
+                label1.Text = "Cancel all orders accepted";
             }
             catch (Exception ex)
             {
@@ -242,8 +253,9 @@ namespace bfCanceller
                 Properties.Settings.Default.secret = "";
                 Properties.Settings.Default.Save();
 
-                await Task.Delay(1000);
             }
+
+            await Task.Delay(3000);
         }
 
 
