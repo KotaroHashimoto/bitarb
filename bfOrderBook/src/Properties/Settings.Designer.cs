@@ -25,18 +25,6 @@ namespace bfOrderBook.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color fore {
-            get {
-                return ((global::System.Drawing.Color)(this["fore"]));
-            }
-            set {
-                this["fore"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("White")]
         public global::System.Drawing.Color back {
             get {
@@ -44,6 +32,18 @@ namespace bfOrderBook.Properties {
             }
             set {
                 this["back"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color a {
+            get {
+                return ((global::System.Drawing.Color)(this["a"]));
+            }
+            set {
+                this["a"] = value;
             }
         }
         
@@ -116,6 +116,18 @@ namespace bfOrderBook.Properties {
             }
             set {
                 this["b_100"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color b {
+            get {
+                return ((global::System.Drawing.Color)(this["b"]));
+            }
+            set {
+                this["b"] = value;
             }
         }
     }
