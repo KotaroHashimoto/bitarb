@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using BitflyerApi;
-
+using System.Net;
 
 namespace bfCanceller
 {
@@ -37,7 +37,9 @@ namespace bfCanceller
 
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+            client = new BitflyerClient("", "", ProductCode.FX_BTC_JPY);
         }
 
         async Task getOpenOrders()
@@ -102,7 +104,7 @@ namespace bfCanceller
                         string side = oo.Side.ToString();
                         string[] amount = oo.OutstandingSize.ToString().Split('.');
                         string price = oo.Price.ToString();
-                        string date = oo.Date.ToLongTimeString() + ss[1] + oo.Date.ToLongDateString();
+                        string date = oo.Date.ToLongTimeString() + ss[1] + oo.Date.ToShortDateString();
 
                         orderList.Add(ss[5 - side.Length] + side + ss[5 - amount[0].Length] + amount[0] +
                             (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + " BTC at " +
@@ -211,8 +213,7 @@ namespace bfCanceller
                 Properties.Settings.Default.secret = secret;
                 Properties.Settings.Default.Save();
 
-//                client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
-                client = new BitflyerClient(key, secret, ProductCode.BTC_JPY);
+                client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
                 await getOpenOrders();
             }
             else
@@ -309,7 +310,6 @@ namespace bfCanceller
 
         private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            Console.WriteLine("hogehoge!");
 
             e.DrawBackground();
 
@@ -317,8 +317,6 @@ namespace bfCanceller
             {
                 Brush b = null;
                 string txt = ((ListBox)sender).Items[e.Index].ToString();
-
-                Console.WriteLine(txt);
 
                 if ((e.State & DrawItemState.Selected) != DrawItemState.Selected)
                 {
