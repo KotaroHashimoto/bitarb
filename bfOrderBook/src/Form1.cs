@@ -43,7 +43,7 @@ namespace bfOrderBook
         {
             InitializeComponent();
 
-            client = new BitflyerClient("", "", ProductCode.FX_BTC_JPY);
+            client = new BitflyerClient("", "", ProductCode.FX_BTC_JPY); client = new BitflyerClient("", "", ProductCode.FX_BTC_JPY);
         }
 
         async Task getOrderBook()
@@ -274,7 +274,7 @@ namespace bfOrderBook
 
             if (-1 < e.Index)
             {
-                e.Graphics.FillRectangle(new SolidBrush(button3.ForeColor), e.Bounds);
+                e.Graphics.FillRectangle(new SolidBrush(button2.ForeColor), e.Bounds);
 
                 if (amounts != null && e.Index < amounts.Count) {
 
@@ -296,26 +296,31 @@ namespace bfOrderBook
                         {
                             b = new SolidBrush(button4.ForeColor);
                         }
+                        else if (0 <= a)
+                        {
+                            b = new SolidBrush(button3.ForeColor);
+                        }
+
                         else if (a <= -100.0)
                         {
-                            b = new SolidBrush(button9.ForeColor);
+                            b = new SolidBrush(button10.ForeColor);
                         }
                         else if (a <= -10.0)
                         {
-                            b = new SolidBrush(button8.ForeColor);
+                            b = new SolidBrush(button9.ForeColor);
                         }
                         else if (a <= -1.0)
                         {
-                            b = new SolidBrush(button7.ForeColor);
+                            b = new SolidBrush(button8.ForeColor);
                         }
                         else
                         {
-                            b = new SolidBrush(button2.ForeColor);
+                            b = new SolidBrush(button7.ForeColor);
                         }
                     }
                     else
                     {
-                        b = new SolidBrush(button2.ForeColor);
+                        b = new SolidBrush(button3.ForeColor);
                     }
 
                     e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, b, e.Bounds);
@@ -323,7 +328,7 @@ namespace bfOrderBook
                 }
                 else
                 {
-                    e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, new SolidBrush(button2.ForeColor), e.Bounds);
+                    e.Graphics.DrawString(((ListBox)sender).Items[e.Index].ToString(), e.Font, new SolidBrush(button3.ForeColor), e.Bounds);
                 }
             }
 
@@ -341,7 +346,7 @@ namespace bfOrderBook
                 button2.ForeColor = cd.Color;
             }
 
-            Properties.Settings.Default.fore = cd.Color;
+            Properties.Settings.Default.back = cd.Color;
             Properties.Settings.Default.Save();
         }
 
@@ -356,7 +361,7 @@ namespace bfOrderBook
                 button3.ForeColor = cd.Color;
             }
 
-            Properties.Settings.Default.back = cd.Color;
+            Properties.Settings.Default.a = cd.Color;
             Properties.Settings.Default.Save();
         }
 
@@ -416,7 +421,7 @@ namespace bfOrderBook
                 button7.ForeColor = cd.Color;
             }
 
-            Properties.Settings.Default.b_1 = cd.Color;
+            Properties.Settings.Default.b = cd.Color;
             Properties.Settings.Default.Save();
         }
 
@@ -431,7 +436,7 @@ namespace bfOrderBook
                 button8.ForeColor = cd.Color;
             }
 
-            Properties.Settings.Default.b_10 = cd.Color;
+            Properties.Settings.Default.b_1 = cd.Color;
             Properties.Settings.Default.Save();
         }
 
@@ -444,6 +449,21 @@ namespace bfOrderBook
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 button9.ForeColor = cd.Color;
+            }
+
+            Properties.Settings.Default.b_10 = cd.Color;
+            Properties.Settings.Default.Save();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+            cd.Color = button10.ForeColor;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                button10.ForeColor = cd.Color;
             }
 
             Properties.Settings.Default.b_100 = cd.Color;

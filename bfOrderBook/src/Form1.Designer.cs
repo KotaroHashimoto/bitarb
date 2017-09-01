@@ -42,6 +42,7 @@ namespace bfOrderBook
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -94,30 +95,30 @@ namespace bfOrderBook
             // 
             // button2
             // 
-            this.button2.ForeColor = global::bfOrderBook.Properties.Settings.Default.fore;
-            this.button2.Location = new System.Drawing.Point(16, 640);
+            this.button2.ForeColor = global::bfOrderBook.Properties.Settings.Default.back;
+            this.button2.Location = new System.Drawing.Point(10, 640);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(40, 20);
             this.button2.TabIndex = 4;
-            this.button2.Text = "fore";
+            this.button2.Text = "back";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
-            this.button3.ForeColor = global::bfOrderBook.Properties.Settings.Default.back;
-            this.button3.Location = new System.Drawing.Point(66, 640);
+            this.button3.ForeColor = global::bfOrderBook.Properties.Settings.Default.a;
+            this.button3.Location = new System.Drawing.Point(55, 640);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(40, 20);
             this.button3.TabIndex = 5;
-            this.button3.Text = "back";
+            this.button3.Text = "a";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
             this.button4.ForeColor = global::bfOrderBook.Properties.Settings.Default.a_1;
-            this.button4.Location = new System.Drawing.Point(116, 640);
+            this.button4.Location = new System.Drawing.Point(100, 640);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(40, 20);
             this.button4.TabIndex = 6;
@@ -128,7 +129,7 @@ namespace bfOrderBook
             // button5
             // 
             this.button5.ForeColor = global::bfOrderBook.Properties.Settings.Default.a_10;
-            this.button5.Location = new System.Drawing.Point(166, 640);
+            this.button5.Location = new System.Drawing.Point(145, 640);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(40, 20);
             this.button5.TabIndex = 7;
@@ -139,7 +140,7 @@ namespace bfOrderBook
             // button6
             // 
             this.button6.ForeColor = global::bfOrderBook.Properties.Settings.Default.a_100;
-            this.button6.Location = new System.Drawing.Point(216, 640);
+            this.button6.Location = new System.Drawing.Point(190, 640);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(40, 20);
             this.button6.TabIndex = 8;
@@ -149,42 +150,54 @@ namespace bfOrderBook
             // 
             // button7
             // 
-            this.button7.ForeColor = global::bfOrderBook.Properties.Settings.Default.b_1;
-            this.button7.Location = new System.Drawing.Point(266, 640);
+            this.button7.ForeColor = global::bfOrderBook.Properties.Settings.Default.b;
+            this.button7.Location = new System.Drawing.Point(235, 640);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(40, 20);
             this.button7.TabIndex = 9;
-            this.button7.Text = "b1";
+            this.button7.Text = "b";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button8
             // 
-            this.button8.ForeColor = global::bfOrderBook.Properties.Settings.Default.b_10;
-            this.button8.Location = new System.Drawing.Point(316, 640);
+            this.button8.ForeColor = global::bfOrderBook.Properties.Settings.Default.b_1;
+            this.button8.Location = new System.Drawing.Point(280, 640);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(40, 20);
             this.button8.TabIndex = 10;
-            this.button8.Text = "b10";
+            this.button8.Text = "b1";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button9
             // 
-            this.button9.ForeColor = global::bfOrderBook.Properties.Settings.Default.b_100;
-            this.button9.Location = new System.Drawing.Point(366, 640);
+            this.button9.ForeColor = global::bfOrderBook.Properties.Settings.Default.b_10;
+            this.button9.Location = new System.Drawing.Point(325, 640);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(40, 20);
             this.button9.TabIndex = 11;
-            this.button9.Text = "b100";
+            this.button9.Text = "b10";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button10
+            // 
+            this.button10.ForeColor = global::bfOrderBook.Properties.Settings.Default.b_100;
+            this.button10.Location = new System.Drawing.Point(370, 640);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(40, 20);
+            this.button10.TabIndex = 12;
+            this.button10.Text = "b100";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(413, 666);
+            this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
@@ -219,6 +232,7 @@ namespace bfOrderBook
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
     }
 }
 
