@@ -7,7 +7,7 @@
     <ProjectGuid>{91572CDC-68A3-4E6E-9E53-8B7FE349F158}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>bfOrderBook</RootNamespace>
-    <AssemblyName>bfOrderBook</AssemblyName>
+    <AssemblyName>BitFlyer FX OrderBook</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,7 +22,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
