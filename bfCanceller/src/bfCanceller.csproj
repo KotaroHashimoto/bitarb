@@ -7,7 +7,7 @@
     <ProjectGuid>{BBDBD163-DBD0-4CB9-90C6-39BC725C97D9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>bfCanceller</RootNamespace>
-    <AssemblyName>bfCanceller</AssemblyName>
+    <AssemblyName>BitFlyer FX Order Canceller</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,7 +22,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

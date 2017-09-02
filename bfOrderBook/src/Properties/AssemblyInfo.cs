@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("bfOrderBook")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("BitFlyer FX OrderBook")]
+[assembly: AssemblyDescription("https://coconala.com/services/204383")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("bfOrderBook")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCompany("Author: Kotaro Hashimoto <hasimoto.kotaro@gmail.com>")]
+[assembly: AssemblyProduct("Palawan Software, Ltd.")]
+[assembly: AssemblyCopyright("Copyright 2017, Palawan Software, Ltd.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
