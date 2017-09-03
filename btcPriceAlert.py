@@ -68,9 +68,10 @@ if __name__ == '__main__':
         msg = ''
 
         for e in base:
-            
             while e.p == 0:
                 e.update()
+
+        for e in base:
 
             if e.p < minp:
                 minp = e.p
@@ -82,6 +83,9 @@ if __name__ == '__main__':
             for et in base:
                 if Price_Diff_To_Alert < abs(e.p - et.p) and et.p < e.p:
                     msg += e.name + '(' + str(e.p) + ') - ' + et.name + '(' + str(et.p) + '), 価格差:' + str(e.p - et.p) + '円    '
+
+        for e in base:
+            e.p = 0:
 
         sbj = maxName + ' - ' + minName + ', 価格差:' + str(maxp - minp) + '円'
         print(sbj)
