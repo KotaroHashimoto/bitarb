@@ -195,7 +195,7 @@ if __name__ == '__main__':
             if pos.checkFund(op, amount, zaif.ask, trex.ask):
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Trex, XEM: ' + str(amount)  + '\n')
-                    print(trex.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 8)))
+                    print(trex.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 3)))
                     print(zaif.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 
