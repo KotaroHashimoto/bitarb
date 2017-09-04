@@ -68,7 +68,7 @@ namespace bfOrderBook
                 return;
             }
 
-            label2.Text = "Equity: " + Math.Round(col.CollateralAmount).ToString() + " JPY (PL: " + (0 < col.CollateralAmount ? "+" : "") + Math.Round(col.OpenPositionProfitAndLoss).ToString() + " JPY,  Margin: " + Math.Round(col.KeepRate * 100, 1).ToString() + " %)";
+            label2.Text = "Equity: " + Math.Round(col.CollateralAmount).ToString() + " JPY (PL: " + (0 < col.OpenPositionProfitAndLoss ? "+" : "") + Math.Round(col.OpenPositionProfitAndLoss).ToString() + " JPY,  Margin: " + Math.Round(col.KeepRate * 100, 1).ToString() + " %)";
 
             //            label2.Text = "Equity: " + col.CollateralAmount.ToString() + " (PL:" + col.OpenPositionProfitAndLoss.ToString() + ")";
             //            label3.Text = "Keep Rate: " + col.KeepRate.ToString() + " % (Margin:" + col.RequiredCollateral.ToString() + ")";
