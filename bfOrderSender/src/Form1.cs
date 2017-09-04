@@ -62,19 +62,12 @@ namespace bfOrderBook
             catch (Exception ex)
             {
                 label2.Text = "Failed to get collateral info.";
-
-//                Console.WriteLine(ex);
+                label3.Text = "";
 
                 return;
             }
 
-            label2.Text = "Equity: " + Math.Round(col.CollateralAmount).ToString() + " JPY (PL: " + (0 < col.OpenPositionProfitAndLoss ? "+" : "") + Math.Round(col.OpenPositionProfitAndLoss).ToString() + " JPY,  Margin: " + Math.Round(col.KeepRate * 100, 1).ToString() + " %)";
-
-            //            label2.Text = "Equity: " + col.CollateralAmount.ToString() + " (PL:" + col.OpenPositionProfitAndLoss.ToString() + ")";
-            //            label3.Text = "Keep Rate: " + col.KeepRate.ToString() + " % (Margin:" + col.RequiredCollateral.ToString() + ")";
-
-//            Console.WriteLine("Equity: " + col.CollateralAmount.ToString() + " (PL:" + col.OpenPositionProfitAndLoss.ToString() + ")");
-//            Console.WriteLine("Keep Rate: " + col.KeepRate.ToString() + " % (Margin:" + col.RequiredCollateral.ToString() + ")");
+            label2.Text = "Equity: " + Math.Round(col.CollateralAmount, 1).ToString() + " JPY,  Margin: " + Math.Round(col.KeepRate * 100, 2).ToString() + " %";
 
             List<Position> pos = null;
 
@@ -89,44 +82,51 @@ namespace bfOrderBook
                 listBox2.Items.Add("Failed to get position info.");
                 listBox2.EndUpdate();
 
-//                Console.WriteLine(ex);
-
                 return;
             }
 
-            Console.WriteLine("pos.Count = " + pos.Count.ToString());
-
+            double positions = 0;
             listBox2.BeginUpdate();
             listBox2.Items.Clear();
 
             foreach (Position ps in pos)
             {
-                /*
-                Console.WriteLine("SwapPointAccumulate = " + ps.SwapPointAccumulate.ToString());
-                Console.WriteLine("RequiredCollateral = " + ps.RequiredCollateral.ToString());
-                Console.WriteLine("Comission = " + ps.Comission.ToString());
-                Console.WriteLine("Price = " + ps.Price.ToString());
-                Console.WriteLine("Leverage = " + ps.Leverage.ToString());
-                Console.WriteLine("OpenDate = " + ps.OpenDate.ToString());
-                Console.WriteLine("ProductCode = " + ps.ProductCode.ToString());
-                */
-
                 string side = ps.Side.ToString();
 
                 double pl = ps.ProfitAndLoss + ps.SwapPointAccumulate;
                 string[] amount = ps.Size.ToString().Split('.');
-                string spl = (0 < pl ? "+" : "") + Math.Round(pl).ToString();
+                string spl = (0 < pl ? "+" : "") + Math.Round(pl, 1).ToString();
 
                 listBox2.Items.Add(ss[4 - side.Length] + side +
                                    ss[4 - amount[0].Length] + amount[0] +
                                    (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + 
                                    " at " + Math.Round(ps.Price).ToString() +
-                                   " (PL: " + spl + " JPY)");   
+                                   " (PL: " + spl + " JPY)");
+
+                positions += ps.Size;
             }
             
             if(pos.Count == 0)
             {
                 listBox2.Items.Add("No Open Position.");
+                label3.Text = "No Open Position.";
+            }
+            else
+            {
+                label3.Text = pos[0].Side + ss[1] + positions.ToString() + " BTC,  PL: " + (0 < col.OpenPositionProfitAndLoss ? " + " : "") + Math.Round(col.OpenPositionProfitAndLoss, 1).ToString() + " JPY";
+
+                if (pos[0].Side.Equals("SELL"))
+                {
+                    label3.ForeColor = Color.Blue;
+                }
+                else if(pos[0].Side.Equals("BUY"))
+                {
+                    label3.ForeColor = Color.Red;
+                }
+                else
+                {
+                    label3.ForeColor = Color.Black;
+                }
             }
 
             listBox2.EndUpdate();
@@ -916,92 +916,91 @@ namespace bfOrderBook
             }
         }
 
-        private void radioButton18_CheckedChanged(object sender, EventArgs e)
+        private void radioButton18_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton17_CheckedChanged(object sender, EventArgs e)
+        private void radioButton17_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton14_CheckedChanged(object sender, EventArgs e)
+        private void radioButton14_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton13_CheckedChanged(object sender, EventArgs e)
+        private void radioButton13_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton12_CheckedChanged(object sender, EventArgs e)
+        private void radioButton12_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton11_CheckedChanged(object sender, EventArgs e)
+        private void radioButton11_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void radioButton1_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void radioButton2_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        private void radioButton3_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        private void radioButton4_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        private void radioButton5_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        private void radioButton6_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton7_CheckedChanged(object sender, EventArgs e)
+        private void radioButton7_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton8_CheckedChanged(object sender, EventArgs e)
+        private void radioButton8_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void radioButton9_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton9_CheckedChanged(object sender, EventArgs e)
+        private void radioButton10_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton10_CheckedChanged(object sender, EventArgs e)
+        private void radioButton15_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
 
-        private void radioButton15_CheckedChanged(object sender, EventArgs e)
-        {
-            amountInc_Click(sender, e);
-        }
-
-        private void radioButton16_CheckedChanged(object sender, EventArgs e)
+        private void radioButton16_Click(object sender, EventArgs e)
         {
             amountInc_Click(sender, e);
         }
@@ -1040,6 +1039,16 @@ namespace bfOrderBook
             }
 
             e.DrawFocusRectangle();
+        }
+
+        private void textBox2_DoubleClick(object sender, EventArgs e)
+        {
+            textBox2.Text = "0";
+        }
+
+        private void textBox3_DoubleClick(object sender, EventArgs e)
+        {
+            textBox3.Text = "0";
         }
     }
 }

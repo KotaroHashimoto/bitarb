@@ -77,6 +77,7 @@ namespace bfOrderBook
             this.radioButton17 = new System.Windows.Forms.RadioButton();
             this.radioButton18 = new System.Windows.Forms.RadioButton();
             this.listBox2 = new System.Windows.Forms.ListBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listBox1
@@ -238,10 +239,10 @@ namespace bfOrderBook
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(419, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 15);
+            this.label2.Size = new System.Drawing.Size(72, 18);
             this.label2.TabIndex = 13;
             this.label2.Text = "Equity: ";
             // 
@@ -285,6 +286,7 @@ namespace bfOrderBook
             this.textBox2.TabIndex = 18;
             this.textBox2.Text = "0";
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.DoubleClick += new System.EventHandler(this.textBox2_DoubleClick);
             // 
             // textBox3
             // 
@@ -293,7 +295,9 @@ namespace bfOrderBook
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(212, 26);
             this.textBox3.TabIndex = 19;
+            this.textBox3.Text = "0";
             this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            this.textBox3.DoubleClick += new System.EventHandler(this.textBox3_DoubleClick);
             // 
             // sellMarket
             // 
@@ -304,7 +308,8 @@ namespace bfOrderBook
             this.sellMarket.Name = "sellMarket";
             this.sellMarket.Size = new System.Drawing.Size(91, 52);
             this.sellMarket.TabIndex = 20;
-            this.sellMarket.Text = "Sell Market";
+//            this.sellMarket.Text = "Sell Market";
+            this.sellMarket.Text = "成行売";
             this.sellMarket.UseVisualStyleBackColor = true;
             this.sellMarket.Click += new System.EventHandler(this.sellMarket_Click);
             // 
@@ -317,7 +322,8 @@ namespace bfOrderBook
             this.buyMarket.Name = "buyMarket";
             this.buyMarket.Size = new System.Drawing.Size(91, 52);
             this.buyMarket.TabIndex = 21;
-            this.buyMarket.Text = "Buy Market";
+//            this.buyMarket.Text = "Buy Market";
+            this.buyMarket.Text = "成行買";
             this.buyMarket.UseVisualStyleBackColor = true;
             this.buyMarket.Click += new System.EventHandler(this.buyMarket_Click);
             // 
@@ -330,7 +336,8 @@ namespace bfOrderBook
             this.sellLimit.Name = "sellLimit";
             this.sellLimit.Size = new System.Drawing.Size(91, 52);
             this.sellLimit.TabIndex = 22;
-            this.sellLimit.Text = "Sell Limit";
+//            this.sellLimit.Text = "Sell Limit";
+            this.sellLimit.Text = "指値売";
             this.sellLimit.UseVisualStyleBackColor = true;
             this.sellLimit.Click += new System.EventHandler(this.sellLimit_Click);
             // 
@@ -343,7 +350,8 @@ namespace bfOrderBook
             this.buyLimit.Name = "buyLimit";
             this.buyLimit.Size = new System.Drawing.Size(91, 52);
             this.buyLimit.TabIndex = 23;
-            this.buyLimit.Text = "Buy Limit";
+//            this.buyLimit.Text = "Buy Limit";
+            this.buyLimit.Text = "指値買";
             this.buyLimit.UseVisualStyleBackColor = true;
             this.buyLimit.Click += new System.EventHandler(this.buyLimit_Click);
             // 
@@ -412,7 +420,7 @@ namespace bfOrderBook
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "1";
             this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            this.radioButton1.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // radioButton2
             // 
@@ -425,7 +433,7 @@ namespace bfOrderBook
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "2";
             this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            this.radioButton2.Click += new System.EventHandler(this.radioButton2_Click);
             // 
             // radioButton3
             // 
@@ -438,7 +446,7 @@ namespace bfOrderBook
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "3";
             this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
+            this.radioButton3.Click += new System.EventHandler(this.radioButton3_Click);
             // 
             // radioButton4
             // 
@@ -451,7 +459,7 @@ namespace bfOrderBook
             this.radioButton4.TabStop = true;
             this.radioButton4.Text = "4";
             this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
+            this.radioButton4.Click += new System.EventHandler(this.radioButton4_Click);
             // 
             // radioButton5
             // 
@@ -464,7 +472,7 @@ namespace bfOrderBook
             this.radioButton5.TabStop = true;
             this.radioButton5.Text = "5";
             this.radioButton5.UseVisualStyleBackColor = true;
-            this.radioButton5.CheckedChanged += new System.EventHandler(this.radioButton5_CheckedChanged);
+            this.radioButton5.Click += new System.EventHandler(this.radioButton5_Click);
             // 
             // radioButton6
             // 
@@ -477,7 +485,7 @@ namespace bfOrderBook
             this.radioButton6.TabStop = true;
             this.radioButton6.Text = "6";
             this.radioButton6.UseVisualStyleBackColor = true;
-            this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton6_CheckedChanged);
+            this.radioButton6.Click += new System.EventHandler(this.radioButton6_Click);
             // 
             // radioButton7
             // 
@@ -490,7 +498,7 @@ namespace bfOrderBook
             this.radioButton7.TabStop = true;
             this.radioButton7.Text = "7";
             this.radioButton7.UseVisualStyleBackColor = true;
-            this.radioButton7.CheckedChanged += new System.EventHandler(this.radioButton7_CheckedChanged);
+            this.radioButton7.Click += new System.EventHandler(this.radioButton7_Click);
             // 
             // radioButton8
             // 
@@ -503,7 +511,7 @@ namespace bfOrderBook
             this.radioButton8.TabStop = true;
             this.radioButton8.Text = "8";
             this.radioButton8.UseVisualStyleBackColor = true;
-            this.radioButton8.CheckedChanged += new System.EventHandler(this.radioButton8_CheckedChanged);
+            this.radioButton8.Click += new System.EventHandler(this.radioButton8_Click);
             // 
             // radioButton9
             // 
@@ -516,7 +524,7 @@ namespace bfOrderBook
             this.radioButton9.TabStop = true;
             this.radioButton9.Text = "9";
             this.radioButton9.UseVisualStyleBackColor = true;
-            this.radioButton9.CheckedChanged += new System.EventHandler(this.radioButton9_CheckedChanged);
+            this.radioButton9.Click += new System.EventHandler(this.radioButton9_Click);
             // 
             // radioButton10
             // 
@@ -529,7 +537,7 @@ namespace bfOrderBook
             this.radioButton10.TabStop = true;
             this.radioButton10.Text = "10";
             this.radioButton10.UseVisualStyleBackColor = true;
-            this.radioButton10.CheckedChanged += new System.EventHandler(this.radioButton10_CheckedChanged);
+            this.radioButton10.Click += new System.EventHandler(this.radioButton10_Click);
             // 
             // radioButton11
             // 
@@ -542,7 +550,7 @@ namespace bfOrderBook
             this.radioButton11.TabStop = true;
             this.radioButton11.Text = "0.5";
             this.radioButton11.UseVisualStyleBackColor = true;
-            this.radioButton11.CheckedChanged += new System.EventHandler(this.radioButton11_CheckedChanged);
+            this.radioButton11.Click += new System.EventHandler(this.radioButton11_Click);
             // 
             // radioButton12
             // 
@@ -555,7 +563,7 @@ namespace bfOrderBook
             this.radioButton12.TabStop = true;
             this.radioButton12.Text = "0.1";
             this.radioButton12.UseVisualStyleBackColor = true;
-            this.radioButton12.CheckedChanged += new System.EventHandler(this.radioButton12_CheckedChanged);
+            this.radioButton12.Click += new System.EventHandler(this.radioButton12_Click);
             // 
             // radioButton13
             // 
@@ -568,7 +576,7 @@ namespace bfOrderBook
             this.radioButton13.TabStop = true;
             this.radioButton13.Text = "0.05";
             this.radioButton13.UseVisualStyleBackColor = true;
-            this.radioButton13.CheckedChanged += new System.EventHandler(this.radioButton13_CheckedChanged);
+            this.radioButton13.Click += new System.EventHandler(this.radioButton13_Click);
             // 
             // radioButton14
             // 
@@ -581,7 +589,7 @@ namespace bfOrderBook
             this.radioButton14.TabStop = true;
             this.radioButton14.Text = "0.01";
             this.radioButton14.UseVisualStyleBackColor = true;
-            this.radioButton14.CheckedChanged += new System.EventHandler(this.radioButton14_CheckedChanged);
+            this.radioButton14.Click += new System.EventHandler(this.radioButton14_Click);
             // 
             // radioButton15
             // 
@@ -594,7 +602,7 @@ namespace bfOrderBook
             this.radioButton15.TabStop = true;
             this.radioButton15.Text = "50";
             this.radioButton15.UseVisualStyleBackColor = true;
-            this.radioButton15.CheckedChanged += new System.EventHandler(this.radioButton15_CheckedChanged);
+            this.radioButton15.Click += new System.EventHandler(this.radioButton15_Click);
             // 
             // radioButton16
             // 
@@ -607,7 +615,7 @@ namespace bfOrderBook
             this.radioButton16.TabStop = true;
             this.radioButton16.Text = "100";
             this.radioButton16.UseVisualStyleBackColor = true;
-            this.radioButton16.CheckedChanged += new System.EventHandler(this.radioButton16_CheckedChanged);
+            this.radioButton16.Click += new System.EventHandler(this.radioButton16_Click);
             // 
             // radioButton17
             // 
@@ -620,7 +628,7 @@ namespace bfOrderBook
             this.radioButton17.TabStop = true;
             this.radioButton17.Text = "0.005";
             this.radioButton17.UseVisualStyleBackColor = true;
-            this.radioButton17.CheckedChanged += new System.EventHandler(this.radioButton17_CheckedChanged);
+            this.radioButton17.Click += new System.EventHandler(this.radioButton17_Click);
             // 
             // radioButton18
             // 
@@ -633,24 +641,35 @@ namespace bfOrderBook
             this.radioButton18.TabStop = true;
             this.radioButton18.Text = "0.001";
             this.radioButton18.UseVisualStyleBackColor = true;
-            this.radioButton18.CheckedChanged += new System.EventHandler(this.radioButton18_CheckedChanged);
+            this.radioButton18.Click += new System.EventHandler(this.radioButton18_Click);
             // 
             // listBox2
             // 
             this.listBox2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.listBox2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(422, 36);
+            this.listBox2.Location = new System.Drawing.Point(422, 62);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(400, 199);
+            this.listBox2.Size = new System.Drawing.Size(400, 173);
             this.listBox2.TabIndex = 47;
             this.listBox2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox2_DrawItem);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(419, 36);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 18);
+            this.label3.TabIndex = 48;
+            this.label3.Text = "PL: ";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(834, 666);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.radioButton18);
             this.Controls.Add(this.radioButton17);
@@ -755,5 +774,6 @@ namespace bfOrderBook
         private System.Windows.Forms.RadioButton radioButton17;
         private System.Windows.Forms.RadioButton radioButton18;
         private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.Label label3;
     }
 }
