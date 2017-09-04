@@ -85,7 +85,7 @@ if __name__ == '__main__':
                     msg += e.name + '(' + str(e.p) + ') - ' + et.name + '(' + str(et.p) + '), 価格差:' + str(e.p - et.p) + '円    '
 
         for e in base:
-            e.p = 0:
+            e.p = 0
 
         sbj = maxName + ' - ' + minName + ', 価格差:' + str(maxp - minp) + '円'
         print(sbj)
