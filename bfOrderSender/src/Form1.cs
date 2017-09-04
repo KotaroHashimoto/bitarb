@@ -110,22 +110,19 @@ namespace bfOrderBook
             {
                 listBox2.Items.Add("No Open Position.");
                 label3.Text = "No Open Position.";
+                label3.ForeColor = Color.Black;
             }
             else
             {
                 label3.Text = pos[0].Side + ss[1] + positions.ToString() + " BTC,  PL: " + (0 < col.OpenPositionProfitAndLoss ? " + " : "") + Math.Round(col.OpenPositionProfitAndLoss, 1).ToString() + " JPY";
 
-                if (pos[0].Side.Equals("SELL"))
+                if (0 <= col.OpenPositionProfitAndLoss)
                 {
                     label3.ForeColor = Color.Blue;
                 }
-                else if(pos[0].Side.Equals("BUY"))
-                {
-                    label3.ForeColor = Color.Red;
-                }
                 else
                 {
-                    label3.ForeColor = Color.Black;
+                    label3.ForeColor = Color.Red;
                 }
             }
 
@@ -983,6 +980,7 @@ namespace bfOrderBook
 
         private void radioButton8_Click(object sender, EventArgs e)
         {
+            amountInc_Click(sender, e);
         }
 
         private void radioButton9_Click(object sender, EventArgs e)
