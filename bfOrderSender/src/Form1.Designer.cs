@@ -1,9 +1,14 @@
-﻿using System.Drawing;
+﻿#define UNIVERSAL
+
+using System.Drawing;
+
 
 namespace bfOrderBook
 {
+
     partial class Form1
     {
+
         /// <summary>
         /// 必要なデザイナー変数です。
         /// </summary>
@@ -69,15 +74,10 @@ namespace bfOrderBook
             this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
             this.radioButton11 = new System.Windows.Forms.RadioButton();
-            this.radioButton12 = new System.Windows.Forms.RadioButton();
-            this.radioButton13 = new System.Windows.Forms.RadioButton();
-            this.radioButton14 = new System.Windows.Forms.RadioButton();
-            this.radioButton15 = new System.Windows.Forms.RadioButton();
-            this.radioButton16 = new System.Windows.Forms.RadioButton();
-            this.radioButton17 = new System.Windows.Forms.RadioButton();
-            this.radioButton18 = new System.Windows.Forms.RadioButton();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -131,7 +131,7 @@ namespace bfOrderBook
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = global::bfOrderSender.Properties.Settings.Default.back;
+            this.button2.ForeColor = global::bfTrader.Properties.Settings.Default.back;
             this.button2.Location = new System.Drawing.Point(10, 640);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(40, 20);
@@ -143,7 +143,7 @@ namespace bfOrderBook
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = global::bfOrderSender.Properties.Settings.Default.a;
+            this.button3.ForeColor = global::bfTrader.Properties.Settings.Default.a;
             this.button3.Location = new System.Drawing.Point(55, 640);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(40, 20);
@@ -155,7 +155,7 @@ namespace bfOrderBook
             // button4
             // 
             this.button4.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = global::bfOrderSender.Properties.Settings.Default.a_1;
+            this.button4.ForeColor = global::bfTrader.Properties.Settings.Default.a_1;
             this.button4.Location = new System.Drawing.Point(100, 640);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(40, 20);
@@ -167,7 +167,7 @@ namespace bfOrderBook
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.ForeColor = global::bfOrderSender.Properties.Settings.Default.a_10;
+            this.button5.ForeColor = global::bfTrader.Properties.Settings.Default.a_10;
             this.button5.Location = new System.Drawing.Point(145, 640);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(40, 20);
@@ -179,7 +179,7 @@ namespace bfOrderBook
             // button6
             // 
             this.button6.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = global::bfOrderSender.Properties.Settings.Default.a_100;
+            this.button6.ForeColor = global::bfTrader.Properties.Settings.Default.a_100;
             this.button6.Location = new System.Drawing.Point(190, 640);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(40, 20);
@@ -191,7 +191,7 @@ namespace bfOrderBook
             // button7
             // 
             this.button7.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = global::bfOrderSender.Properties.Settings.Default.b;
+            this.button7.ForeColor = global::bfTrader.Properties.Settings.Default.b;
             this.button7.Location = new System.Drawing.Point(235, 640);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(40, 20);
@@ -203,7 +203,7 @@ namespace bfOrderBook
             // button8
             // 
             this.button8.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.ForeColor = global::bfOrderSender.Properties.Settings.Default.b_1;
+            this.button8.ForeColor = global::bfTrader.Properties.Settings.Default.b_1;
             this.button8.Location = new System.Drawing.Point(280, 640);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(40, 20);
@@ -215,7 +215,7 @@ namespace bfOrderBook
             // button9
             // 
             this.button9.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button9.ForeColor = global::bfOrderSender.Properties.Settings.Default.b_10;
+            this.button9.ForeColor = global::bfTrader.Properties.Settings.Default.b_10;
             this.button9.Location = new System.Drawing.Point(325, 640);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(40, 20);
@@ -227,7 +227,7 @@ namespace bfOrderBook
             // button10
             // 
             this.button10.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button10.ForeColor = global::bfOrderSender.Properties.Settings.Default.b_100;
+            this.button10.ForeColor = global::bfTrader.Properties.Settings.Default.b_100;
             this.button10.Location = new System.Drawing.Point(370, 640);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(40, 20);
@@ -240,7 +240,7 @@ namespace bfOrderBook
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(419, 9);
+            this.label2.Location = new System.Drawing.Point(422, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 18);
             this.label2.TabIndex = 13;
@@ -249,7 +249,7 @@ namespace bfOrderBook
             // button11
             // 
             this.button11.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button11.Location = new System.Drawing.Point(425, 626);
+            this.button11.Location = new System.Drawing.Point(724, 626);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(104, 34);
             this.button11.TabIndex = 14;
@@ -261,7 +261,7 @@ namespace bfOrderBook
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(427, 258);
+            this.label4.Location = new System.Drawing.Point(430, 308);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(72, 19);
             this.label4.TabIndex = 16;
@@ -271,7 +271,7 @@ namespace bfOrderBook
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(427, 393);
+            this.label5.Location = new System.Drawing.Point(430, 443);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(63, 19);
             this.label5.TabIndex = 17;
@@ -280,7 +280,7 @@ namespace bfOrderBook
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(496, 255);
+            this.textBox2.Location = new System.Drawing.Point(499, 305);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(212, 26);
             this.textBox2.TabIndex = 18;
@@ -291,7 +291,7 @@ namespace bfOrderBook
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(496, 390);
+            this.textBox3.Location = new System.Drawing.Point(499, 440);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(212, 26);
             this.textBox3.TabIndex = 19;
@@ -304,12 +304,11 @@ namespace bfOrderBook
             this.sellMarket.Enabled = false;
             this.sellMarket.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sellMarket.ForeColor = System.Drawing.Color.Blue;
-            this.sellMarket.Location = new System.Drawing.Point(454, 294);
+            this.sellMarket.Location = new System.Drawing.Point(457, 344);
             this.sellMarket.Name = "sellMarket";
             this.sellMarket.Size = new System.Drawing.Size(91, 52);
             this.sellMarket.TabIndex = 20;
-//            this.sellMarket.Text = "Sell Market";
-            this.sellMarket.Text = "成行売";
+            this.sellMarket.Text = "Sell Market";
             this.sellMarket.UseVisualStyleBackColor = true;
             this.sellMarket.Click += new System.EventHandler(this.sellMarket_Click);
             // 
@@ -318,12 +317,11 @@ namespace bfOrderBook
             this.buyMarket.Enabled = false;
             this.buyMarket.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buyMarket.ForeColor = System.Drawing.Color.Red;
-            this.buyMarket.Location = new System.Drawing.Point(560, 294);
+            this.buyMarket.Location = new System.Drawing.Point(563, 344);
             this.buyMarket.Name = "buyMarket";
             this.buyMarket.Size = new System.Drawing.Size(91, 52);
             this.buyMarket.TabIndex = 21;
-//            this.buyMarket.Text = "Buy Market";
-            this.buyMarket.Text = "成行買";
+            this.buyMarket.Text = "Buy Market";
             this.buyMarket.UseVisualStyleBackColor = true;
             this.buyMarket.Click += new System.EventHandler(this.buyMarket_Click);
             // 
@@ -332,12 +330,11 @@ namespace bfOrderBook
             this.sellLimit.Enabled = false;
             this.sellLimit.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sellLimit.ForeColor = System.Drawing.Color.Blue;
-            this.sellLimit.Location = new System.Drawing.Point(454, 427);
+            this.sellLimit.Location = new System.Drawing.Point(457, 477);
             this.sellLimit.Name = "sellLimit";
             this.sellLimit.Size = new System.Drawing.Size(91, 52);
             this.sellLimit.TabIndex = 22;
-//            this.sellLimit.Text = "Sell Limit";
-            this.sellLimit.Text = "指値売";
+            this.sellLimit.Text = "Sell Limit";
             this.sellLimit.UseVisualStyleBackColor = true;
             this.sellLimit.Click += new System.EventHandler(this.sellLimit_Click);
             // 
@@ -346,19 +343,18 @@ namespace bfOrderBook
             this.buyLimit.Enabled = false;
             this.buyLimit.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buyLimit.ForeColor = System.Drawing.Color.Red;
-            this.buyLimit.Location = new System.Drawing.Point(560, 427);
+            this.buyLimit.Location = new System.Drawing.Point(563, 477);
             this.buyLimit.Name = "buyLimit";
             this.buyLimit.Size = new System.Drawing.Size(91, 52);
             this.buyLimit.TabIndex = 23;
-//            this.buyLimit.Text = "Buy Limit";
-            this.buyLimit.Text = "指値買";
+            this.buyLimit.Text = "Buy Limit";
             this.buyLimit.UseVisualStyleBackColor = true;
             this.buyLimit.Click += new System.EventHandler(this.buyLimit_Click);
             // 
             // amountInc
             // 
             this.amountInc.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.amountInc.Location = new System.Drawing.Point(676, 286);
+            this.amountInc.Location = new System.Drawing.Point(679, 336);
             this.amountInc.Name = "amountInc";
             this.amountInc.Size = new System.Drawing.Size(32, 32);
             this.amountInc.TabIndex = 24;
@@ -369,7 +365,7 @@ namespace bfOrderBook
             // amountDec
             // 
             this.amountDec.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.amountDec.Location = new System.Drawing.Point(676, 324);
+            this.amountDec.Location = new System.Drawing.Point(679, 374);
             this.amountDec.Name = "amountDec";
             this.amountDec.Size = new System.Drawing.Size(32, 32);
             this.amountDec.TabIndex = 25;
@@ -380,7 +376,7 @@ namespace bfOrderBook
             // priceInc
             // 
             this.priceInc.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.priceInc.Location = new System.Drawing.Point(676, 422);
+            this.priceInc.Location = new System.Drawing.Point(679, 472);
             this.priceInc.Name = "priceInc";
             this.priceInc.Size = new System.Drawing.Size(32, 32);
             this.priceInc.TabIndex = 26;
@@ -391,7 +387,7 @@ namespace bfOrderBook
             // priceDec
             // 
             this.priceDec.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.priceDec.Location = new System.Drawing.Point(676, 460);
+            this.priceDec.Location = new System.Drawing.Point(679, 510);
             this.priceDec.Name = "priceDec";
             this.priceDec.Size = new System.Drawing.Size(32, 32);
             this.priceDec.TabIndex = 27;
@@ -403,7 +399,7 @@ namespace bfOrderBook
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(427, 520);
+            this.label6.Location = new System.Drawing.Point(430, 557);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(81, 19);
             this.label6.TabIndex = 28;
@@ -412,245 +408,154 @@ namespace bfOrderBook
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton1.Location = new System.Drawing.Point(737, 387);
+            this.radioButton1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton1.Location = new System.Drawing.Point(740, 308);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(31, 17);
+            this.radioButton1.Size = new System.Drawing.Size(72, 23);
             this.radioButton1.TabIndex = 29;
             this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "1";
+            this.radioButton1.Text = "0.001";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton2.Location = new System.Drawing.Point(737, 410);
+            this.radioButton2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton2.Location = new System.Drawing.Point(740, 331);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(31, 17);
+            this.radioButton2.Size = new System.Drawing.Size(72, 23);
             this.radioButton2.TabIndex = 30;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "2";
+            this.radioButton2.Text = "0.005";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.Click += new System.EventHandler(this.radioButton2_Click);
             // 
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton3.Location = new System.Drawing.Point(737, 433);
+            this.radioButton3.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton3.Location = new System.Drawing.Point(740, 354);
             this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(31, 17);
+            this.radioButton3.Size = new System.Drawing.Size(63, 23);
             this.radioButton3.TabIndex = 31;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "3";
+            this.radioButton3.Text = "0.01";
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.Click += new System.EventHandler(this.radioButton3_Click);
             // 
             // radioButton4
             // 
             this.radioButton4.AutoSize = true;
-            this.radioButton4.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton4.Location = new System.Drawing.Point(737, 456);
+            this.radioButton4.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton4.Location = new System.Drawing.Point(740, 377);
             this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(31, 17);
+            this.radioButton4.Size = new System.Drawing.Size(63, 23);
             this.radioButton4.TabIndex = 32;
             this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "4";
+            this.radioButton4.Text = "0.05";
             this.radioButton4.UseVisualStyleBackColor = true;
             this.radioButton4.Click += new System.EventHandler(this.radioButton4_Click);
             // 
             // radioButton5
             // 
             this.radioButton5.AutoSize = true;
-            this.radioButton5.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton5.Location = new System.Drawing.Point(737, 479);
+            this.radioButton5.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton5.Location = new System.Drawing.Point(740, 400);
             this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(31, 17);
+            this.radioButton5.Size = new System.Drawing.Size(54, 23);
             this.radioButton5.TabIndex = 33;
             this.radioButton5.TabStop = true;
-            this.radioButton5.Text = "5";
+            this.radioButton5.Text = "0.1";
             this.radioButton5.UseVisualStyleBackColor = true;
             this.radioButton5.Click += new System.EventHandler(this.radioButton5_Click);
             // 
             // radioButton6
             // 
             this.radioButton6.AutoSize = true;
-            this.radioButton6.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton6.Location = new System.Drawing.Point(737, 501);
+            this.radioButton6.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton6.Location = new System.Drawing.Point(740, 422);
             this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(31, 17);
+            this.radioButton6.Size = new System.Drawing.Size(54, 23);
             this.radioButton6.TabIndex = 34;
             this.radioButton6.TabStop = true;
-            this.radioButton6.Text = "6";
+            this.radioButton6.Text = "0.5";
             this.radioButton6.UseVisualStyleBackColor = true;
             this.radioButton6.Click += new System.EventHandler(this.radioButton6_Click);
             // 
             // radioButton7
             // 
             this.radioButton7.AutoSize = true;
-            this.radioButton7.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton7.Location = new System.Drawing.Point(737, 524);
+            this.radioButton7.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton7.Location = new System.Drawing.Point(740, 445);
             this.radioButton7.Name = "radioButton7";
-            this.radioButton7.Size = new System.Drawing.Size(31, 17);
+            this.radioButton7.Size = new System.Drawing.Size(36, 23);
             this.radioButton7.TabIndex = 35;
             this.radioButton7.TabStop = true;
-            this.radioButton7.Text = "7";
+            this.radioButton7.Text = "1";
             this.radioButton7.UseVisualStyleBackColor = true;
             this.radioButton7.Click += new System.EventHandler(this.radioButton7_Click);
             // 
             // radioButton8
             // 
             this.radioButton8.AutoSize = true;
-            this.radioButton8.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton8.Location = new System.Drawing.Point(737, 547);
+            this.radioButton8.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton8.Location = new System.Drawing.Point(740, 468);
             this.radioButton8.Name = "radioButton8";
-            this.radioButton8.Size = new System.Drawing.Size(31, 17);
+            this.radioButton8.Size = new System.Drawing.Size(36, 23);
             this.radioButton8.TabIndex = 36;
             this.radioButton8.TabStop = true;
-            this.radioButton8.Text = "8";
+            this.radioButton8.Text = "5";
             this.radioButton8.UseVisualStyleBackColor = true;
             this.radioButton8.Click += new System.EventHandler(this.radioButton8_Click);
             // 
             // radioButton9
             // 
             this.radioButton9.AutoSize = true;
-            this.radioButton9.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton9.Location = new System.Drawing.Point(737, 570);
+            this.radioButton9.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton9.Location = new System.Drawing.Point(740, 491);
             this.radioButton9.Name = "radioButton9";
-            this.radioButton9.Size = new System.Drawing.Size(31, 17);
+            this.radioButton9.Size = new System.Drawing.Size(45, 23);
             this.radioButton9.TabIndex = 37;
             this.radioButton9.TabStop = true;
-            this.radioButton9.Text = "9";
+            this.radioButton9.Text = "10";
             this.radioButton9.UseVisualStyleBackColor = true;
             this.radioButton9.Click += new System.EventHandler(this.radioButton9_Click);
             // 
             // radioButton10
             // 
             this.radioButton10.AutoSize = true;
-            this.radioButton10.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton10.Location = new System.Drawing.Point(737, 593);
+            this.radioButton10.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton10.Location = new System.Drawing.Point(740, 514);
             this.radioButton10.Name = "radioButton10";
-            this.radioButton10.Size = new System.Drawing.Size(37, 17);
+            this.radioButton10.Size = new System.Drawing.Size(45, 23);
             this.radioButton10.TabIndex = 38;
             this.radioButton10.TabStop = true;
-            this.radioButton10.Text = "10";
+            this.radioButton10.Text = "50";
             this.radioButton10.UseVisualStyleBackColor = true;
             this.radioButton10.Click += new System.EventHandler(this.radioButton10_Click);
             // 
             // radioButton11
             // 
             this.radioButton11.AutoSize = true;
-            this.radioButton11.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton11.Location = new System.Drawing.Point(737, 365);
+            this.radioButton11.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButton11.Location = new System.Drawing.Point(740, 514);
             this.radioButton11.Name = "radioButton11";
-            this.radioButton11.Size = new System.Drawing.Size(43, 17);
-            this.radioButton11.TabIndex = 39;
+            this.radioButton11.Size = new System.Drawing.Size(54, 23);
+            this.radioButton11.TabIndex = 38;
             this.radioButton11.TabStop = true;
-            this.radioButton11.Text = "0.5";
+            this.radioButton11.Text = "100";
             this.radioButton11.UseVisualStyleBackColor = true;
             this.radioButton11.Click += new System.EventHandler(this.radioButton11_Click);
-            // 
-            // radioButton12
-            // 
-            this.radioButton12.AutoSize = true;
-            this.radioButton12.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton12.Location = new System.Drawing.Point(737, 343);
-            this.radioButton12.Name = "radioButton12";
-            this.radioButton12.Size = new System.Drawing.Size(43, 17);
-            this.radioButton12.TabIndex = 40;
-            this.radioButton12.TabStop = true;
-            this.radioButton12.Text = "0.1";
-            this.radioButton12.UseVisualStyleBackColor = true;
-            this.radioButton12.Click += new System.EventHandler(this.radioButton12_Click);
-            // 
-            // radioButton13
-            // 
-            this.radioButton13.AutoSize = true;
-            this.radioButton13.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton13.Location = new System.Drawing.Point(737, 321);
-            this.radioButton13.Name = "radioButton13";
-            this.radioButton13.Size = new System.Drawing.Size(49, 17);
-            this.radioButton13.TabIndex = 41;
-            this.radioButton13.TabStop = true;
-            this.radioButton13.Text = "0.05";
-            this.radioButton13.UseVisualStyleBackColor = true;
-            this.radioButton13.Click += new System.EventHandler(this.radioButton13_Click);
-            // 
-            // radioButton14
-            // 
-            this.radioButton14.AutoSize = true;
-            this.radioButton14.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton14.Location = new System.Drawing.Point(737, 299);
-            this.radioButton14.Name = "radioButton14";
-            this.radioButton14.Size = new System.Drawing.Size(49, 17);
-            this.radioButton14.TabIndex = 42;
-            this.radioButton14.TabStop = true;
-            this.radioButton14.Text = "0.01";
-            this.radioButton14.UseVisualStyleBackColor = true;
-            this.radioButton14.Click += new System.EventHandler(this.radioButton14_Click);
-            // 
-            // radioButton15
-            // 
-            this.radioButton15.AutoSize = true;
-            this.radioButton15.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton15.Location = new System.Drawing.Point(737, 617);
-            this.radioButton15.Name = "radioButton15";
-            this.radioButton15.Size = new System.Drawing.Size(37, 17);
-            this.radioButton15.TabIndex = 43;
-            this.radioButton15.TabStop = true;
-            this.radioButton15.Text = "50";
-            this.radioButton15.UseVisualStyleBackColor = true;
-            this.radioButton15.Click += new System.EventHandler(this.radioButton15_Click);
-            // 
-            // radioButton16
-            // 
-            this.radioButton16.AutoSize = true;
-            this.radioButton16.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton16.Location = new System.Drawing.Point(737, 640);
-            this.radioButton16.Name = "radioButton16";
-            this.radioButton16.Size = new System.Drawing.Size(43, 17);
-            this.radioButton16.TabIndex = 44;
-            this.radioButton16.TabStop = true;
-            this.radioButton16.Text = "100";
-            this.radioButton16.UseVisualStyleBackColor = true;
-            this.radioButton16.Click += new System.EventHandler(this.radioButton16_Click);
-            // 
-            // radioButton17
-            // 
-            this.radioButton17.AutoSize = true;
-            this.radioButton17.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton17.Location = new System.Drawing.Point(737, 277);
-            this.radioButton17.Name = "radioButton17";
-            this.radioButton17.Size = new System.Drawing.Size(55, 17);
-            this.radioButton17.TabIndex = 45;
-            this.radioButton17.TabStop = true;
-            this.radioButton17.Text = "0.005";
-            this.radioButton17.UseVisualStyleBackColor = true;
-            this.radioButton17.Click += new System.EventHandler(this.radioButton17_Click);
-            // 
-            // radioButton18
-            // 
-            this.radioButton18.AutoSize = true;
-            this.radioButton18.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton18.Location = new System.Drawing.Point(737, 255);
-            this.radioButton18.Name = "radioButton18";
-            this.radioButton18.Size = new System.Drawing.Size(55, 17);
-            this.radioButton18.TabIndex = 46;
-            this.radioButton18.TabStop = true;
-            this.radioButton18.Text = "0.001";
-            this.radioButton18.UseVisualStyleBackColor = true;
-            this.radioButton18.Click += new System.EventHandler(this.radioButton18_Click);
             // 
             // listBox2
             // 
             this.listBox2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.listBox2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(422, 62);
+            this.listBox2.Location = new System.Drawing.Point(419, 115);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(400, 173);
+            this.listBox2.Size = new System.Drawing.Size(409, 173);
             this.listBox2.TabIndex = 47;
             this.listBox2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox2_DrawItem);
             // 
@@ -658,26 +563,42 @@ namespace bfOrderBook
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(419, 36);
+            this.label3.Location = new System.Drawing.Point(422, 45);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 18);
             this.label3.TabIndex = 48;
             this.label3.Text = "PL: ";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(425, 83);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(104, 18);
+            this.label7.TabIndex = 49;
+            this.label7.Text = "Open Orders:";
+            // 
+            // button12
+            // 
+            this.button12.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button12.Location = new System.Drawing.Point(535, 78);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(150, 28);
+            this.button12.TabIndex = 50;
+            this.button12.Text = "Cancel All Orders";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(834, 666);
+            this.Controls.Add(this.button12);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.listBox2);
-            this.Controls.Add(this.radioButton18);
-            this.Controls.Add(this.radioButton17);
-            this.Controls.Add(this.radioButton16);
-            this.Controls.Add(this.radioButton15);
-            this.Controls.Add(this.radioButton14);
-            this.Controls.Add(this.radioButton13);
-            this.Controls.Add(this.radioButton12);
             this.Controls.Add(this.radioButton11);
             this.Controls.Add(this.radioButton10);
             this.Controls.Add(this.radioButton9);
@@ -725,7 +646,7 @@ namespace bfOrderBook
 
         }
 
-        #endregion
+#endregion
 
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox1;
@@ -765,15 +686,14 @@ namespace bfOrderBook
         private System.Windows.Forms.RadioButton radioButton8;
         private System.Windows.Forms.RadioButton radioButton9;
         private System.Windows.Forms.RadioButton radioButton10;
+
+#if UNIVERSAL
         private System.Windows.Forms.RadioButton radioButton11;
-        private System.Windows.Forms.RadioButton radioButton12;
-        private System.Windows.Forms.RadioButton radioButton13;
-        private System.Windows.Forms.RadioButton radioButton14;
-        private System.Windows.Forms.RadioButton radioButton15;
-        private System.Windows.Forms.RadioButton radioButton16;
-        private System.Windows.Forms.RadioButton radioButton17;
-        private System.Windows.Forms.RadioButton radioButton18;
+#endif
+
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button12;
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define UNIVERSAL
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,10 +23,14 @@ namespace bfOrderBook
         List<double> amounts;
         List<double> prices;
 
+        bool processing = false;
+
+        List<Order> orders = null;
         double amount;
         double price;
 
         bool mask = false;
+        bool mask2 = false;
         int SMAX = 0;
 
         string[] ss = new string[] {
@@ -51,6 +57,152 @@ namespace bfOrderBook
         }
 
 
+        async Task getOpenOrders()
+        {
+
+            List<string> orderListA = new List<string>();
+            List<string> orderListB = new List<string>();
+            List<string> orderList = orderListA;
+
+            if (listBox2.DataSource == null) {
+                listBox2.Items.Add("Connecting to BitFlyer server ...");
+            }
+
+            if (listBox2.DataSource != null)
+            {
+                if (listBox2.DataSource.Equals(orderListA))
+                {
+                    orderList = orderListB;
+                }
+                else
+                {
+                    orderList = orderListA;
+                }
+            }
+
+           if (orderList != null)
+            {
+                orderList.Clear();
+            }
+
+            try
+            {
+                orders = await client.GetMyActiveOrders();
+            }
+            catch (Exception ex)
+            {
+                listBox2.DataSource = null;
+                listBox2.Items.Add(ex);
+                listBox2.Items.Add("Connecting to BitFlyer server ...");
+
+                bfTrader.Properties.Settings.Default.key = "";
+                bfTrader.Properties.Settings.Default.secret = "";
+                bfTrader.Properties.Settings.Default.Save();
+
+                await Task.Delay(1000);
+                return;
+            }
+
+            if (orders == null)
+            {
+                orderList.Add("No Open Order.");
+            }
+            else if (orders.Count == 0)
+            {
+                orderList.Add("No Open Order.");
+            }
+            else
+            {
+                foreach (Order oo in orders)
+                {
+                    string side = oo.Side.ToString();
+                    string[] amount = oo.OutstandingSize.ToString().Split('.');
+                    string price = oo.Price.ToString();
+                    string date = oo.Date.ToLongTimeString() + ss[1] + oo.Date.ToShortDateString();
+
+                    orderList.Add(ss[4 - side.Length] + side + ss[4 - amount[0].Length] + amount[0] +
+                                  (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + " BTC at " +
+                                  ss[6 - price.Length] + price + ss[3] + date);
+                }
+            }
+
+            int foc = listBox2.SelectedIndex;
+            int pos = listBox2.TopIndex;
+
+            if (!mask2)
+            {
+                listBox2.BeginUpdate();
+                listBox2.DataSource = orderList;
+                listBox2.EndUpdate();
+            }
+
+            if (orders == null)
+            {
+                // do nothing
+            }
+            else
+            {
+                listBox2.SelectedIndex = (foc < orders.Count) ? foc : 0;
+                listBox2.TopIndex = (pos < orders.Count) ? pos : 0;
+            }
+        }
+
+        private void listBox2_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            mask2 = !mask2;
+        }
+
+        private void listBox2_MouseClick(object sender, MouseEventArgs e)
+        {
+            mask2 = false;
+        }
+
+        private void listBox2_MouseUp(object sender, MouseEventArgs e)
+        {
+            mask2 = false;
+        }
+
+        private void listBox2_MouseDown(object sender, MouseEventArgs e)
+        {
+            mask2 = false;
+        }
+
+        private async void listBox2_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+            if (!processing && orders != null)
+            {
+                processing = true;
+
+                try
+                {
+                    if (listBox2.SelectedIndex < orders.Count)
+                    {
+                        label6.Text = "Cancel Order #" + listBox2.SelectedIndex.ToString()  +  " Requesting";
+                        await client.CancelOrder(orders.ElementAt(listBox2.SelectedIndex));
+                        label6.Text = "Cancel Order #" + listBox2.SelectedIndex.ToString() + " Accepted";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    listBox2.DataSource = null;
+                    listBox2.Items.Add(ex);
+                    listBox2.Items.Add("Failed to cancel order.");
+                    label6.Text = "Cancel Order #" + listBox2.SelectedIndex.ToString() + " Failed";
+                    label6.Text += "\n" + ex.ToString();
+
+                    bfTrader.Properties.Settings.Default.key = "";
+                    bfTrader.Properties.Settings.Default.secret = "";
+                    bfTrader.Properties.Settings.Default.Save();
+
+                    await Task.Delay(1000);
+                }
+
+                processing = false;
+            }
+        }
+
+
         async Task getPosition()
         {
             Collateral col = null;
@@ -63,6 +215,7 @@ namespace bfOrderBook
             {
                 label2.Text = "Failed to get collateral info.";
                 label3.Text = "";
+                label6.Text = ex.ToString();
 
                 return;
             }
@@ -77,38 +230,40 @@ namespace bfOrderBook
             }
             catch (Exception ex)
             {
-                listBox2.BeginUpdate();
-                listBox2.Items.Clear();
-                listBox2.Items.Add("Failed to get position info.");
-                listBox2.EndUpdate();
+//                listBox2.BeginUpdate();
+//                listBox2.Items.Clear();
+//                listBox2.Items.Add("Failed to get position info.");
+//                listBox2.EndUpdate();
+
+                label6.Text = ex.ToString();
 
                 return;
             }
 
             double positions = 0;
-            listBox2.BeginUpdate();
-            listBox2.Items.Clear();
+//            listBox2.BeginUpdate();
+//            listBox2.Items.Clear();
 
             foreach (Position ps in pos)
             {
-                string side = ps.Side.ToString();
+//                string side = ps.Side.ToString();
 
-                double pl = ps.ProfitAndLoss + ps.SwapPointAccumulate;
-                string[] amount = ps.Size.ToString().Split('.');
-                string spl = (0 < pl ? "+" : "") + Math.Round(pl, 1).ToString();
+//                double pl = ps.ProfitAndLoss + ps.SwapPointAccumulate;
+//                string[] amount = ps.Size.ToString().Split('.');
+//                string spl = (0 < pl ? "+" : "") + Math.Round(pl, 1).ToString();
 
-                listBox2.Items.Add(ss[4 - side.Length] + side +
-                                   ss[4 - amount[0].Length] + amount[0] +
-                                   (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + 
-                                   " at " + Math.Round(ps.Price).ToString() +
-                                   " (PL: " + spl + " JPY)");
+//                listBox2.Items.Add(ss[4 - side.Length] + side +
+//                                   ss[4 - amount[0].Length] + amount[0] +
+//                                   (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + 
+//                                   " at " + Math.Round(ps.Price).ToString() +
+//                                   " (PL: " + spl + " JPY)");
 
                 positions += ps.Size;
             }
             
             if(pos.Count == 0)
             {
-                listBox2.Items.Add("No Open Position.");
+//                listBox2.Items.Add("No Open Position.");
                 label3.Text = "No Open Position.";
                 label3.ForeColor = Color.Black;
             }
@@ -126,8 +281,9 @@ namespace bfOrderBook
                 }
             }
 
-            listBox2.EndUpdate();
+//            listBox2.EndUpdate();
         }
+
 
         async Task getOrderBook()
         {
@@ -151,15 +307,11 @@ namespace bfOrderBook
             choices.Add(radioButton8);
             choices.Add(radioButton9);
             choices.Add(radioButton10);
-            choices.Add(radioButton11);
-            choices.Add(radioButton12);
-            choices.Add(radioButton13);
-            choices.Add(radioButton14);
-            choices.Add(radioButton15);
-            choices.Add(radioButton16);
-            choices.Add(radioButton17);
-            choices.Add(radioButton18);
 
+
+#if UNIVERSAL
+            choices.Add(radioButton11);
+#endif
 
             radioButton1.Checked = true;
             listBox1.Items.Add("Connecting to BitFlyer server ...");
@@ -167,7 +319,10 @@ namespace bfOrderBook
 
             while (true)
             {
+
+                await getOpenOrders();
                 await getPosition();
+
                 label6.Text = "";
 
                 if (!first)
@@ -378,8 +533,8 @@ namespace bfOrderBook
         private async void Form1_Load(object sender, EventArgs e)
         {
 
-            String key = bfOrderSender.Properties.Settings.Default.key;
-            String secret = bfOrderSender.Properties.Settings.Default.secret;
+            String key = bfTrader.Properties.Settings.Default.key;
+            String secret = bfTrader.Properties.Settings.Default.secret;
 
             if (key != null && secret != null && 0 < key.Length && 0 < secret.Length)
             {
@@ -387,9 +542,9 @@ namespace bfOrderBook
             }
             else if (InputBox(ref key, ref secret) != DialogResult.OK)
             {
-                bfOrderSender.Properties.Settings.Default.key = "";
-                bfOrderSender.Properties.Settings.Default.secret = "";
-                bfOrderSender.Properties.Settings.Default.Save();
+                bfTrader.Properties.Settings.Default.key = "";
+                bfTrader.Properties.Settings.Default.secret = "";
+                bfTrader.Properties.Settings.Default.Save();
 
                 listBox1.Items.Add("Failed to read API key.");
                 Application.Exit();
@@ -397,18 +552,18 @@ namespace bfOrderBook
 
             if (key != null && secret != null && 0 < key.Length && 0 < secret.Length)
             {
-                bfOrderSender.Properties.Settings.Default.key = key;
-                bfOrderSender.Properties.Settings.Default.secret = secret;
-                bfOrderSender.Properties.Settings.Default.Save();
+                bfTrader.Properties.Settings.Default.key = key;
+                bfTrader.Properties.Settings.Default.secret = secret;
+                bfTrader.Properties.Settings.Default.Save();
 
                 client = new BitflyerClient(key, secret, ProductCode.FX_BTC_JPY);
                 await getOrderBook();
             }
             else
             {
-                bfOrderSender.Properties.Settings.Default.key = "";
-                bfOrderSender.Properties.Settings.Default.secret = "";
-                bfOrderSender.Properties.Settings.Default.Save();
+                bfTrader.Properties.Settings.Default.key = "";
+                bfTrader.Properties.Settings.Default.secret = "";
+                bfTrader.Properties.Settings.Default.Save();
 
                 listBox1.Items.Add("Failed to read API key.");
                 Application.Exit();
@@ -504,8 +659,8 @@ namespace bfOrderBook
                 button2.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.back = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.back = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -519,8 +674,8 @@ namespace bfOrderBook
                 button3.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.a = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.a = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -534,8 +689,8 @@ namespace bfOrderBook
                 button4.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.a_1 = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.a_1 = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -549,8 +704,8 @@ namespace bfOrderBook
                 button5.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.a_10 = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.a_10 = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -564,8 +719,8 @@ namespace bfOrderBook
                 button6.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.a_100 = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.a_100 = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -579,8 +734,8 @@ namespace bfOrderBook
                 button7.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.b = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.b = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -594,8 +749,8 @@ namespace bfOrderBook
                 button8.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.b_1 = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.b_1 = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -609,8 +764,8 @@ namespace bfOrderBook
                 button9.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.b_10 = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.b_10 = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -624,15 +779,15 @@ namespace bfOrderBook
                 button10.ForeColor = cd.Color;
             }
 
-            bfOrderSender.Properties.Settings.Default.b_100 = cd.Color;
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.b_100 = cd.Color;
+            bfTrader.Properties.Settings.Default.Save();
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            bfOrderSender.Properties.Settings.Default.key = "";
-            bfOrderSender.Properties.Settings.Default.secret = "";
-            bfOrderSender.Properties.Settings.Default.Save();
+            bfTrader.Properties.Settings.Default.key = "";
+            bfTrader.Properties.Settings.Default.secret = "";
+            bfTrader.Properties.Settings.Default.Save();
 
             Application.Exit();
         }
@@ -1047,6 +1202,31 @@ namespace bfOrderBook
         private void textBox3_DoubleClick(object sender, EventArgs e)
         {
             textBox3.Text = "0";
+        }
+
+        private async void button12_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                label6.Text = "Cancel All Order Requesting";
+                await client.CancelAllOrders();
+                label6.Text = "Cancel All Order Accepted";
+            }
+            catch (Exception ex)
+            {
+                listBox2.DataSource = null;
+                listBox2.Items.Add(ex);
+                listBox2.Items.Add("Failed to cancel all orders.");
+
+                label6.Text = "Cancel All Order Failed";
+                label6.Text += "\n" + ex.ToString();
+
+                bfTrader.Properties.Settings.Default.key = "";
+                bfTrader.Properties.Settings.Default.secret = "";
+                bfTrader.Properties.Settings.Default.Save();
+
+                await Task.Delay(1000);
+            }
         }
     }
 }
