@@ -558,6 +558,7 @@ namespace bfOrderBook
             this.listBox2.Size = new System.Drawing.Size(409, 173);
             this.listBox2.TabIndex = 47;
             this.listBox2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox2_DrawItem);
+            this.listBox2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox2_MouseDoubleClick);
             // 
             // label3
             // 
@@ -568,6 +569,7 @@ namespace bfOrderBook
             this.label3.Size = new System.Drawing.Size(40, 18);
             this.label3.TabIndex = 48;
             this.label3.Text = "PL: ";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label7
             // 

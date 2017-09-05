@@ -23,6 +23,7 @@ namespace bfOrderBook
         List<double> amounts;
         List<double> prices;
 
+        double positions = 0;
         bool processing = false;
 
         List<Order> orders = null;
@@ -240,7 +241,7 @@ namespace bfOrderBook
                 return;
             }
 
-            double positions = 0;
+            positions = 0;
 //            listBox2.BeginUpdate();
 //            listBox2.Items.Clear();
 
@@ -1227,6 +1228,11 @@ namespace bfOrderBook
 
                 await Task.Delay(1000);
             }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = positions.ToString();
         }
     }
 }
