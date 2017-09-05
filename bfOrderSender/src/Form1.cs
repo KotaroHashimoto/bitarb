@@ -270,7 +270,7 @@ namespace bfOrderBook
             }
             else
             {
-                label3.Text = pos[0].Side + ss[1] + positions.ToString() + " BTC,  PL: " + (0 < col.OpenPositionProfitAndLoss ? " + " : "") + Math.Round(col.OpenPositionProfitAndLoss, 1).ToString() + " JPY";
+                label3.Text = pos[0].Side + ss[1] + positions.ToString() + " BTC,  PL: " + (0 < col.OpenPositionProfitAndLoss ? "+" : "") + Math.Round(col.OpenPositionProfitAndLoss, 1).ToString() + " JPY";
 
                 if (0 <= col.OpenPositionProfitAndLoss)
                 {
