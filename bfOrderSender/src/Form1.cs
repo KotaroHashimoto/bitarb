@@ -231,45 +231,30 @@ namespace bfOrderBook
             }
             catch (Exception ex)
             {
-//                listBox2.BeginUpdate();
-//                listBox2.Items.Clear();
-//                listBox2.Items.Add("Failed to get position info.");
-//                listBox2.EndUpdate();
-
+                label3.Text = "Failed to get position info.";
                 label6.Text = ex.ToString();
 
                 return;
             }
 
+            double average = 0;
             positions = 0;
-//            listBox2.BeginUpdate();
-//            listBox2.Items.Clear();
 
             foreach (Position ps in pos)
             {
-//                string side = ps.Side.ToString();
-
-//                double pl = ps.ProfitAndLoss + ps.SwapPointAccumulate;
-//                string[] amount = ps.Size.ToString().Split('.');
-//                string spl = (0 < pl ? "+" : "") + Math.Round(pl, 1).ToString();
-
-//                listBox2.Items.Add(ss[4 - side.Length] + side +
-//                                   ss[4 - amount[0].Length] + amount[0] +
-//                                   (amount.Length == 2 ? ("." + amount[1] + ss[8 - amount[1].Length]) : ss[9]) + 
-//                                   " at " + Math.Round(ps.Price).ToString() +
-//                                   " (PL: " + spl + " JPY)");
-
+                average += (ps.Size * ps.Price);
                 positions += ps.Size;
             }
             
             if(pos.Count == 0)
             {
-//                listBox2.Items.Add("No Open Position.");
+                label8.Text = "Ave: ";
                 label3.Text = "No Open Position.";
                 label3.ForeColor = Color.Black;
             }
             else
             {
+                label8.Text = "Ave: " + Math.Round(average / positions, 1).ToString();
                 label3.Text = pos[0].Side + ss[1] + positions.ToString() + " BTC,  PL: " + (0 < col.OpenPositionProfitAndLoss ? "+" : "") + Math.Round(col.OpenPositionProfitAndLoss, 1).ToString() + " JPY";
 
                 if (0 <= col.OpenPositionProfitAndLoss)
@@ -281,8 +266,6 @@ namespace bfOrderBook
                     label3.ForeColor = Color.Red;
                 }
             }
-
-//            listBox2.EndUpdate();
         }
 
 
@@ -851,38 +834,19 @@ namespace bfOrderBook
         {
             if (Double.TryParse(textBox2.Text, out amount))
             {
-                if (amount <= 0)
-                {
-                    sellMarket.Enabled = false;
-                    buyMarket.Enabled = false;
-
-                    textBox3_TextChanged(sender, e);
-
-                    return;
-                }
-
-                string[] am = textBox2.Text.Split('.');
-                if (1 < am.Length)
-                {
-                    if (am[1].Length < 4)
-                    {
-                        sellMarket.Enabled = true;
-                        buyMarket.Enabled = true;
-
-                        textBox3_TextChanged(sender, e);
-
-                        return;
-                    }
-                }
-                else
+                if (0.001 <= amount)
                 {
                     sellMarket.Enabled = true;
                     buyMarket.Enabled = true;
-
-                    textBox3_TextChanged(sender, e);
-
-                    return;
                 }
+                else
+                {
+                    sellMarket.Enabled = false;
+                    buyMarket.Enabled = false;
+                }
+
+                textBox3_TextChanged(sender, e);
+                return;
             }
 
             sellMarket.Enabled = false;
