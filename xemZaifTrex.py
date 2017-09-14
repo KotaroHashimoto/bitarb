@@ -160,14 +160,14 @@ class Position:
     def checkFund(self, op, amount, zask, task):
 
         if 'Sell Zaif' == op:
-            if Zaif.XEM < amount or Trex.BTC < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * task[0]:
+            if Zaif.XEM < amount or Trex.BTC < round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0) * task[0]:
                 return False
             else:
                 return True
 
         elif 'Buy Zaif' == op:
 
-            if Zaif.JPY < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * zask[0] or Trex.XEM < amount:
+            if Zaif.JPY < round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0) * zask[0] or Trex.XEM < amount:
                 return False
             else:
                 return True
@@ -195,13 +195,13 @@ if __name__ == '__main__':
             if pos.checkFund(op, amount, zaif.ask, trex.ask):
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Trex, XEM: ' + str(amount)  + '\n')
-                    print(trex.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 3)))
+                    print(trex.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 3)))
                     print(zaif.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 
                 elif op == 'Buy Zaif':
                     print('\nBuy Zaif XEM, Sell Trex, XEM: ' + str(amount)  + '\n')
-                    print(zaif.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 1)))
+                    print(zaif.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 1)))
                     print(trex.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 

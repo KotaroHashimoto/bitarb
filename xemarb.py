@@ -161,14 +161,14 @@ class Position:
     def checkFund(self, op, amount, zask, pask):
 
         if 'Sell Zaif' == op:
-            if Zaif.XEM < amount or Polo.BTC < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * pask[0]:
+            if Zaif.XEM < amount or Polo.BTC < round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0) * pask[0]:
                 return False
             else:
                 return True
 
         elif 'Buy Zaif' == op:
 
-            if Zaif.JPY < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * zask[0] or Polo.XEM < amount:
+            if Zaif.JPY < round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0) * zask[0] or Polo.XEM < amount:
                 return False
             else:
                 return True
@@ -196,13 +196,13 @@ if __name__ == '__main__':
             if pos.checkFund(op, amount, zaif.ask, polo.ask):
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
-                    print(polo.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 4)))
+                    print(polo.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 4)))
                     print(zaif.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 
                 elif op == 'Buy Zaif':
                     print('\nBuy Zaif XEM, Sell Polo, XEM: ' + str(amount)  + '\n')
-                    print(zaif.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 1)))
+                    print(zaif.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 1)))
                     print(polo.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 

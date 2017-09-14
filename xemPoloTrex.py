@@ -158,13 +158,13 @@ class Position:
     def checkFund(self, op, amount, task, pask):
 
         if 'Sell Trex' == op:
-            if Trex.XEM < amount or Polo.BTC < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * pask[0]:
+            if Trex.XEM < amount or Polo.BTC < round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0) * pask[0]:
                 return False
             else:
                 return True
 
         elif 'Buy Trex' == op:
-            if Trex.BTC < round(amount * (100.0 + Position.DIFF - Commission) / 100.0) * task[0] or Polo.XEM < amount:
+            if Trex.BTC < round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0) * task[0] or Polo.XEM < amount:
                 return False
             else:
                 return True
@@ -192,13 +192,13 @@ if __name__ == '__main__':
             if pos.checkFund(op, amount, trex.ask, polo.ask):
                 if op == 'Sell Trex':
                     print('\nSell Bittrex XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
-                    print(polo.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 4)))
+                    print(polo.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 4)))
                     print(trex.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 
                 elif op == 'Buy Trex':
                     print('\nBuy Bittrex XEM, Sell Polo, XEM: ' + str(amount)  + '\n')
-                    print(trex.buy(round(amount * (100.0 + Position.DIFF - Commission) / 100.0, 3)))
+                    print(trex.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 3)))
                     print(polo.sell(amount))
                     time.sleep(Mask_After_Trade_Sec)
 
