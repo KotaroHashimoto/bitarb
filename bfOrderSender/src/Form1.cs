@@ -96,9 +96,9 @@ namespace bfOrderBook
                 listBox2.Items.Add(ex);
                 listBox2.Items.Add("Connecting to BitFlyer server ...");
 
-                bfTrader.Properties.Settings.Default.key = "";
-                bfTrader.Properties.Settings.Default.secret = "";
-                bfTrader.Properties.Settings.Default.Save();
+//                bfTrader.Properties.Settings.Default.key = "";
+//                bfTrader.Properties.Settings.Default.secret = "";
+//                bfTrader.Properties.Settings.Default.Save();
 
                 await Task.Delay(1000);
                 return;
@@ -192,9 +192,9 @@ namespace bfOrderBook
                     label6.Text = "Cancel Order #" + listBox2.SelectedIndex.ToString() + " Failed";
                     label6.Text += "\n" + ex.ToString();
 
-                    bfTrader.Properties.Settings.Default.key = "";
-                    bfTrader.Properties.Settings.Default.secret = "";
-                    bfTrader.Properties.Settings.Default.Save();
+//                    bfTrader.Properties.Settings.Default.key = "";
+//                    bfTrader.Properties.Settings.Default.secret = "";
+//                    bfTrader.Properties.Settings.Default.Save();
 
                     await Task.Delay(1000);
                 }
@@ -1186,9 +1186,9 @@ namespace bfOrderBook
                 label6.Text = "Cancel All Order Failed";
                 label6.Text += "\n" + ex.ToString();
 
-                bfTrader.Properties.Settings.Default.key = "";
-                bfTrader.Properties.Settings.Default.secret = "";
-                bfTrader.Properties.Settings.Default.Save();
+//                bfTrader.Properties.Settings.Default.key = "";
+//                bfTrader.Properties.Settings.Default.secret = "";
+//                bfTrader.Properties.Settings.Default.Save();
 
                 await Task.Delay(1000);
             }
