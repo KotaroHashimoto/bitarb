@@ -102,15 +102,15 @@ class OANDA(Thread):
                 if 'CNY_JPY' == self.symbol:
                     cnyjpy = Currency('CNYJPY')
                     cnyjpy.refresh()
-                    ask = str(int(cnyjpy.get_rate()) * 1000)
-                    bid = ask
+                    ask = str(int(cnyjpy.get_ask()) * 1000)
+                    bid = str(int(cnyjpy.get_bid()) * 1000)
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
 
                 elif 'USD_CNY' == self.symbol:
                     usdcny = Currency('USDCNY')
                     usdcny.refresh()
-                    ask = str(int(usdcny.get_rate()) * 10000)
-                    bid = ask
+                    ask = str(int(usdcny.get_ask()) * 10000)
+                    bid = str(int(usdcny.get_bid()) * 10000)
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
 
                 else:
@@ -578,14 +578,14 @@ if __name__ == '__main__':
 #    us = [] #この行の先頭の#を外すと BTCUSDとBTCCNY非表示
 
     xem = [ \
-#        XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
-#        XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
-#        XemExchange(window.root, 'Bittrex XEM', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-xem', 'Last', 'Ask', 'Bid'), \
+        XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
+        XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
+        XemExchange(window.root, 'Bittrex XEM', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-xem', 'Last', 'Ask', 'Bid'), \
         ] 
 
     eth = [ \
-#        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
-#        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
+        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
+        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
         ] 
 
     oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
