@@ -7,6 +7,7 @@ from time import sleep
 from oandapy import API
 import datetime as dt
 import ssl
+from yahoo_finance import Currency
 from sys import version_info, exit
 
 if version_info.major == 2 and version_info.minor == 7:
@@ -97,26 +98,33 @@ class OANDA(Thread):
 
         while True:
             try:
-                prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
-
-                up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
-                self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
-                OANDA.PRICE[self.symbol] = up
             
                 if 'CNY_JPY' == self.symbol:
-                    ask = str(int(1000 * prices[0].get('ask')))
-                    bid = str(int(1000 * prices[0].get('bid')))
+                    cnyjpy = Currency('CNYJPY')
+                    cnyjpy.refresh()
+                    ask = str(int(cnyjpy.get_rate()) * 1000)
+                    bid = ask
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
+
                 elif 'USD_CNY' == self.symbol:
-                    ask = str(int(10000 * prices[0].get('ask')))
-                    bid = str(int(10000 * prices[0].get('bid')))
+                    usdcny = Currency('USDCNY')
+                    usdcny.refresh()
+                    ask = str(int(usdcny.get_rate()) * 10000)
+                    bid = ask
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
+
                 else:
+                    prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
                     ask = str(int(1000 * prices[0].get('ask')))
                     bid = str(int(1000 * prices[0].get('bid')))
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
 
-            except:
+                up = (float(bid) + float(ask)) / 2.0
+                self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
+                OANDA.PRICE[self.symbol] = up
+
+            except Exception as e:
+                print(e)
                 self.label.configure(fg = 'gray')
                 sleep(10)
                 self.label.configure(fg = 'black')
@@ -298,7 +306,7 @@ class ForExchange(Exchange):
                 b = str(round(self.bid))
                 l = str(round(self.p))
 
-                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
+                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:6] + '\t' +  a[:3] + ',' + a[3:6] + '\t' +  b[:3] + ',' + b[3:6])
                 sleep(Window.PERIOD)
 
             except:
@@ -570,18 +578,18 @@ if __name__ == '__main__':
 #    us = [] #この行の先頭の#を外すと BTCUSDとBTCCNY非表示
 
     xem = [ \
-        XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
-        XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
-        XemExchange(window.root, 'Bittrex XEM', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-xem', 'Last', 'Ask', 'Bid'), \
+#        XemExchange(window.root, 'Zaif XEM', 'https://api.zaif.jp/api/1/ticker/xem_jpy', 'last', 'ask', 'bid'), \
+#        XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
+#        XemExchange(window.root, 'Bittrex XEM', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-xem', 'Last', 'Ask', 'Bid'), \
         ] 
 
     eth = [ \
-        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
-        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
+#        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
+#        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
         ] 
 
-#    oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
-    oanda = [OANDA(window.root, currencyPair, False) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート非表示
+    oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
+#    oanda = [OANDA(window.root, currencyPair, False) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート非表示
 
     exchangeList = tuple([window] + base + foreign + us + xem + eth + oanda)
 
