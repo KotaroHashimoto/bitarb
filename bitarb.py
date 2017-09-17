@@ -563,7 +563,7 @@ if __name__ == '__main__':
         ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'Houbi', 'http://api.huobi.com/staticmarket/ticker_btc_json.js', 'last', 'sell', 'buy'), \
         ForExchange(window.root, 'BTCC', 'https://pro-data.btcc.com/data/pro/ticker?symbol=XBTCNY', 'Last', 'AskPrice', 'BidPrice'), \
-        ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
+        ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_cny', 'last', 'sell', 'buy'), \
         ]
 
     us = [USExchange(window.root, e) for e in foreign] #この行の先頭の#を外すとBTCUSDとBTCCNY表示
@@ -576,12 +576,12 @@ if __name__ == '__main__':
         ] 
 
     eth = [ \
-        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
-        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
+#        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
+#        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
         ] 
 
-#    oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
-    oanda = [OANDA(window.root, currencyPair, False) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート非表示
+    oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
+#    oanda = [OANDA(window.root, currencyPair, False) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート非表示
 
     exchangeList = tuple([window] + base + foreign + us + xem + eth + oanda)
 
