@@ -6,8 +6,8 @@ API_SECRET = ''
 # 売買するBTC量
 Trade_Amount = 1.0
 
-# 価格監視間隔 [分]
-Monitor_Cycle_Min = 10
+# 価格監視間隔 [秒]
+Monitor_Cycle_Sec = 10
 
 # Ask + Order_Diff_Sell に売りが入る
 Order_Diff_Sell = 8000
@@ -147,8 +147,8 @@ if __name__ == '__main__':
         print('bid = ' + str(bid) + ', ask = ' + str(ask) + ', pos = ' + str(len(positions)) + ', openOrders = ' + str(len(openOrders)))
 
         if (not openOrders) and (not positions):
-            s(Trade_Amount, ask + OrderDiff_Sell)
-            b(Trade_Amount, bid - OrderDiff_Buy)
+            s(Trade_Amount, ask + Order_Diff_Sell)
+            b(Trade_Amount, bid - Order_Diff_Buy)
 
         elif (not positions) and (len(openOrders) == 2):
             if lastBid + Mod_Diff_Bid < bid or ask < lastAsk - Mod_Diff_Ask:
@@ -175,4 +175,4 @@ if __name__ == '__main__':
                 
         lastBid = bid
         lastAsk = ask
-        sleep(Monitor_Cycle_Min * 60)
+        sleep(Monitor_Cycle_Sec)
