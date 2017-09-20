@@ -74,7 +74,7 @@ class Window(Thread):
 
 class OANDA(Thread):
 
-    PRICE = {'USD_JPY':1, 'EUR_JPY':1, 'GBP_JPY':1, 'CNY_JPY':1, 'USD_CNY':1}
+    PRICE = {'USD_JPY':1, 'EUR_JPY':1, 'GBP_JPY':1, 'CNY_JPY':1}#, 'USD_CNY':1}
     
     def __init__(self, root, symbol, display = True):
         Thread.__init__(self)
@@ -93,21 +93,42 @@ class OANDA(Thread):
 
         self.oanda = API(environment='practice', access_token='f80296b600eddebbb0402eeabce34139-55d481314b19c1127978ecd05c9dca65')
 
+        
+    def getCNYJPY(self):
+
+        url = 'https://finance.google.com/finance?q=CNYJPY'
+        c = urlopen(Request(url, headers = {'User-Agent':'Hoge Browser'}))
+        for line in reversed(list(c)):
+            if b'1 CNY =' in line and b'JPY' in line:
+                return float(line.split(b'bld>')[1].split(b' JPY')[0])
+
+        return 1.0
+    
+
     def run(self):
 
         while True:
+            sleep(Window.PERIOD)
+            
             try:
-                prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
+                if 'CNY_JPY' == self.symbol:
+                    cnyjpy = self.getCNYJPY()
+                    ask = str(int(10000 * cnyjpy))
+                    bid = ask
+                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
 
+                    up = cnyjpy
+                    self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
+                    OANDA.PRICE[self.symbol] = up
+
+                    continue
+                
+                prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
                 up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
                 self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
                 OANDA.PRICE[self.symbol] = up
-            
-                if 'CNY_JPY' == self.symbol:
-                    ask = str(int(1000 * prices[0].get('ask')))
-                    bid = str(int(1000 * prices[0].get('bid')))
-                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
-                elif 'USD_CNY' == self.symbol:
+                    
+                if 'USD_CNY' == self.symbol:
                     ask = str(int(10000 * prices[0].get('ask')))
                     bid = str(int(10000 * prices[0].get('bid')))
                     self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
@@ -290,6 +311,7 @@ class ForExchange(Exchange):
                 self.ask = self.rask * OANDA.PRICE[self.base]
                 self.bid = self.rbid * OANDA.PRICE[self.base]
                 up = self.rp * OANDA.PRICE[self.base]
+
 
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
