@@ -172,6 +172,12 @@ if __name__ == '__main__':
                 elif positions[0]['side'] == 'BUY':
                     s(positions[0]['size'], positions[0]['price'] + Close_Diff)
 
+        elif (not positions) and (len(openOrders) == 1):
+            while openOrders:
+                ca()
+                openOrders = oo()
+
+            continue
                 
         lastBid = bid
         lastAsk = ask
