@@ -164,6 +164,10 @@ class Exchange(Thread):
         self.bid = 0
         self.p = 0
 
+        if name == 'Quoine JPY':
+            Label(root).pack()
+
+
     def run(self):
 
         while True:
@@ -263,8 +267,8 @@ class Future(Thread):
 class ForExchange(Exchange):
 
     def __init__(self, root, name, url, last, sask, sbid):    
-        if name == 'Quoine USD':
-            Label(root).pack()
+#        if name == 'Quoine USD':
+#            Label(root).pack()
 
         Exchange.__init__(self, root, name, url, last, sask, sbid)
 
@@ -416,9 +420,9 @@ class EthereumExchange(ForExchange):
 
 class XemExchange(Exchange):
 
-    POLOXEMBTC = 0
-    TREXXEMBTC = 0
-    ZAIFBTCJPY = {}
+    POLOXEMBTC = None
+    TREXXEMBTC = None
+    ZAIFBTCJPY = None
 
     ZXEM_ASK = 0
     PXEM_ASK = 0
