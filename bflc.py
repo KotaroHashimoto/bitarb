@@ -3,8 +3,9 @@
 API_KEY = ''
 API_SECRET = ''
 
+
 # 売買するBTC量
-Trade_Amount = 1.0
+Trade_Amount = 1.001
 
 # 価格監視間隔 [秒]
 Monitor_Cycle_Sec = 10
@@ -81,49 +82,20 @@ def s(amount, p = 0):
 def oo():
 
     res = api.getchildorders(product_code = pcode, child_order_state = 'ACTIVE')
-    return res
-
-    i = 1
-    for c in res:
-        print((' ' if i < 10 else '') + str(i) + ': ' + c['side'] + ' ' + c['child_order_type'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']))
-        i += 1
-
-    if not res:
-        print('No open order')
-
-
-def cc(i):
-
-    res = api.getchildorders(product_code = pcode, child_order_state = 'ACTIVE')
-    o = 1
-    for c in res:
-        if o == i:
-            res = api.cancelchildorder(product_code = pcode, child_order_id = c['child_order_id'])
-            print('Cancelled: ' + c['side'] + ' ' + c['child_order_type'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']))
-            return
-
-        o += 1
-
-    print('No open order cancelled.')
+    return [c for c in res if (c['size'] * 1000) % 10 == 1]
 
 
 def ca():
 
-    res = api.cancelallchildorders(product_code = pcode)
-    return res
-    print(res)
+   res = api.getchildorders(product_code = pcode, child_order_state = 'ACTIVE')
+   for o in [c for c in res if (c['size'] * 1000) % 10 == 1]:
+       res = api.cancelchildorder(product_code = pcode, child_order_id = o['child_order_id'])
 
 
 def ps():
 
     res = api.getpositions(product_code = pcode)
-    return res
-
-    for c in res:
-        print(c['side'] + ', size = ' + str(c['size']) + ', price = ' + str(c['price']) + ', pnl = ' + ('+' if 0 < c['pnl'] else '') + str(c['pnl']) + ', swap = ' + str(c['swap_point_accumulate']))
-
-    if not res:
-        print('No position')
+    return [c for c in res if (c['size'] * 1000) % 10 == 1]
 
 
 def hl():
@@ -150,6 +122,11 @@ if __name__ == '__main__':
             s(Trade_Amount, ask + Order_Diff_Sell)
             b(Trade_Amount, bid - Order_Diff_Buy)
 
+            while len(openOrders) < 2:
+                sleep(1)
+                openOrders = oo()
+
+
         elif (not positions) and (len(openOrders) == 2):
             if lastBid + Mod_Diff_Bid < bid or ask < lastAsk - Mod_Diff_Ask:
                 
@@ -171,6 +148,11 @@ if __name__ == '__main__':
 
                 elif positions[0]['side'] == 'BUY':
                     s(positions[0]['size'], positions[0]['price'] + Close_Diff)
+
+                while len(openOrders) < 1:
+                    sleep(1)
+                    openOrders = oo()
+
 
         elif (not positions) and (len(openOrders) == 1):
             while openOrders:
