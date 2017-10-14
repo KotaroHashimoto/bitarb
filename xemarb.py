@@ -194,6 +194,9 @@ if __name__ == '__main__':
 
             op, amount = pos.operation(zaif.ask, zaif.bid, polo.ask, polo.bid)
             if pos.checkFund(op, amount, zaif.ask, polo.ask):
+
+                time.sleep(1.5)
+
                 if op == 'Sell Zaif':
                     print('\nSell Zaif XEM, Buy Polo, XEM: ' + str(amount)  + '\n')
                     print(polo.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 4)))
