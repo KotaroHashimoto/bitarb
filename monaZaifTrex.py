@@ -193,6 +193,9 @@ if __name__ == '__main__':
 
             op, amount = pos.operation(zaif.ask, zaif.bid, trex.ask, trex.bid)
             if pos.checkFund(op, amount, zaif.ask, trex.ask):
+
+                time.sleep(1.5)
+
                 if op == 'Sell Zaif':
                     print('\nSell Zaif MONA, Buy Trex, MONA: ' + str(amount)  + '\n')
                     print(trex.buy(round(amount * (100.0 + abs(Position.DIFF) - Commission) / 100.0, 3)))
