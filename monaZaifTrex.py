@@ -82,10 +82,10 @@ class Zaif:
         return 'Zaif: ask' + str(self.ask) + ', bid' + str(self.bid)
 
     def sell(self, am):
-        return self.private.trade(currency_pair = 'mona_jpy', action = 'ask', price = round(self.bid[0] * Sell_Rate_Ratio, 1), amount = am)
+        return self.private.trade(currency_pair = 'mona_jpy', action = 'ask', price = round(self.bid[0] * Sell_Rate_Ratio, 1), amount = round(am))
 
     def buy(self, am):
-        return self.private.trade(currency_pair = 'mona_jpy', action = 'bid', price = round(self.ask[0] * Buy_Rate_Ratio, 1), amount = am)
+        return self.private.trade(currency_pair = 'mona_jpy', action = 'bid', price = round(self.ask[0] * Buy_Rate_Ratio, 1), amount = round(am))
 
 
 class Trex:
