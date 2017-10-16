@@ -4,7 +4,7 @@ API_KEY = ''
 API_SECRET = ''
 
 
-# 売買するBTC量
+# 売買するBTC量（小数第3桁は1とすること）
 Trade_Amount = 1.001
 
 # 価格監視間隔 [秒]
