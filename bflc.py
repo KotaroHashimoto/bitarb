@@ -79,23 +79,36 @@ def s(amount, p = 0):
         print('Sell order failed. ' + str(res))
 
 
+def thisSize(size):
+
+    if not '.' in str(size):
+        return False
+
+    frac = str(size).split('.')[-1]
+
+    if len(frac) == 3 and frac[2] == '1':
+        return True
+    else:
+        return False
+
+
 def oo():
 
     res = api.getchildorders(product_code = pcode, child_order_state = 'ACTIVE')
-    return [c for c in res if (c['size'] * 1000) % 10 == 1]
+    return [c for c in res if thisSize(c['size'])]
 
 
 def ca():
 
    res = api.getchildorders(product_code = pcode, child_order_state = 'ACTIVE')
-   for o in [c for c in res if (c['size'] * 1000) % 10 == 1]:
+   for o in [c for c in res if thisSize(c['size'])]:
        res = api.cancelchildorder(product_code = pcode, child_order_id = o['child_order_id'])
 
 
 def ps():
 
     res = api.getpositions(product_code = pcode)
-    return [c for c in res if (c['size'] * 1000) % 10 == 1]
+    return [c for c in res if thisSize(c['size'])]
 
 
 def hl():
