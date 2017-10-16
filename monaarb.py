@@ -72,78 +72,6 @@ class Window(Thread):
         self.update(-1)
 
 
-class OANDA(Thread):
-
-    PRICE = {'USD_JPY':1, 'EUR_JPY':1, 'GBP_JPY':1, 'CNY_JPY':1}#, 'USD_CNY':1}
-    
-    def __init__(self, root, symbol, display = True):
-        Thread.__init__(self)
-        
-        if symbol == 'USD_JPY':
-            Label(root).pack()
-
-        self.lstr = StringVar()
-        self.lstr.set('')
-        self.label = Label(root, textvariable = self.lstr, font = (Window.FONT, Window.FSIZE))
-
-#        if display:
-#            self.label.pack()
-
-        self.symbol = symbol
-
-        self.oanda = API(environment='practice', access_token='f80296b600eddebbb0402eeabce34139-55d481314b19c1127978ecd05c9dca65')
-
-        
-    def getCNYJPY(self):
-
-        url = 'https://finance.google.com/finance?q=CNYJPY'
-        c = urlopen(Request(url, headers = {'User-Agent':'Hoge Browser'}))
-        for line in reversed(list(c)):
-            if b'1 CNY =' in line and b'JPY' in line:
-                return float(line.split(b'bld>')[1].split(b' JPY')[0])
-
-        return 1.0
-    
-
-    def run(self):
-
-        while True:
-            sleep(Window.PERIOD)
-            
-            try:
-                if 'CNY_JPY' == self.symbol:
-                    cnyjpy = self.getCNYJPY()
-                    ask = str(int(10000 * cnyjpy))
-                    bid = ask
-                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:2] + '.' + ask[2:] + '\t ' + bid[:2] + '.' + bid[2:])
-
-                    up = cnyjpy
-                    self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
-                    OANDA.PRICE[self.symbol] = up
-
-                    continue
-                
-                prices = self.oanda.get_prices(instruments = self.symbol).get('prices')
-                up = (prices[0].get('ask') + prices[0].get('bid')) / 2.0
-                self.label.configure(fg = ('black' if OANDA.PRICE[self.symbol] == up else ('red' if OANDA.PRICE[self.symbol] > up else 'green')))
-                OANDA.PRICE[self.symbol] = up
-                    
-                if 'USD_CNY' == self.symbol:
-                    ask = str(int(10000 * prices[0].get('ask')))
-                    bid = str(int(10000 * prices[0].get('bid')))
-                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t ' + ask[:1] + '.' + ask[1:] + '\t ' + bid[:1] + '.' + bid[1:])
-                else:
-                    ask = str(int(1000 * prices[0].get('ask')))
-                    bid = str(int(1000 * prices[0].get('bid')))
-                    self.lstr.set(self.symbol.replace('_', '/') + ':  \t\t' + ask[:3] + '.' + ask[3:] + '\t' + bid[:3] + '.' + bid[3:])
-
-            except:
-                self.label.configure(fg = 'gray')
-                sleep(10)
-                self.label.configure(fg = 'black')
-                continue
-
-
 class Exchange(Thread):
 
     def __init__(self, root, name, url, last, sask, sbid):
@@ -158,9 +86,7 @@ class Exchange(Thread):
         self.str = StringVar()
         self.str.set('')
         self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
-
-        if self.name != 'Zaif':
-            self.label.pack()
+        self.label.pack()
 
         self.ask = 0
         self.bid = 0
@@ -172,21 +98,26 @@ class Exchange(Thread):
             try:
                 data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
-                if self.name == 'Zaif':
+                if self.name == 'Zaif BTC/JPY':
                     XemExchange.ZAIFBTCJPY = float(data[self.last])
 
                 self.ask = float(data[self.sask])
                 self.bid = float(data[self.sbid])
         
-                up = int(data[self.last])
+                up = float(data[self.last])
                 self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
                 self.p = up
-        
-                a = str(self.ask)
-                b = str(self.bid)
-                l = str(self.p)
+
+                if self.name == 'Zaif BTC/JPY':
+                    a = str(round(self.ask))
+                    b = str(round(self.bid))
+                    l = str(round(self.p))
+
+                else:
+                    a = str(format(self.ask, '.8f'))
+                    b = str(format(self.bid, '.8f'))
+                    l = str(format(self.p, '.8f'))
                 
-#                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
                 sleep(Window.PERIOD)
 
@@ -198,167 +129,31 @@ class Exchange(Thread):
                 continue
 
 
-class ForExchange(Exchange):
-
-    def __init__(self, root, name, url, last, sask, sbid):    
-#        if name == 'Quoine USD':
-#            Label(root).pack()
-
-        Exchange.__init__(self, root, name, url, last, sask, sbid)
-
-        self.rask = 0
-        self.rbid = 0
-        self.rp = 0
-        
-        if 'Houbi' == self.name or 'BTCC' == self.name or 'OKCoinCN' == self.name:
-            self.base = 'CNY_JPY'
-        else:
-            self.base = 'USD_JPY'
-
-    def run(self):
-    
-        while True:
-            try:
-                if self.name == 'coinbase':
-                    data = {}
-                    data[self.last] = load(urlopen(Request(self.url + self.last, headers = {'User-Agent':'Hoge Browser'})))['data']['amount']
-                    data[self.sask] = load(urlopen(Request(self.url + self.sask, headers = {'User-Agent':'Hoge Browser'})))['data']['amount']
-                    data[self.sbid] = load(urlopen(Request(self.url + self.sbid, headers = {'User-Agent':'Hoge Browser'})))['data']['amount']
-                else:
-                    data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
-
-                if self.name == 'BTC-e':
-                    data = data['btc_usd']
-                elif self.name == 'Poloniex':
-                    XemExchange.POLOXEMBTC = data['BTC_XEM']
-                    data = data['USDT_BTC']
-                elif 'OKCoin' in self.name or 'Houbi' == self.name or 'BTCC' == self.name :
-                    data = data['ticker']
-                elif self.name == 'Kraken':
-                    data = data['result']['XXBTZUSD']
-
-                if self.name == 'Kraken':
-                    self.rask = float(data[self.sask][0])
-                    self.rbid = float(data[self.sbid][0])
-                    self.rp = float(data[self.last][0])
-                else:
-                    self.rask = float(data[self.sask])
-                    self.rbid = float(data[self.sbid])
-                    self.rp = float(data[self.last])
-
-                self.ask = self.rask * OANDA.PRICE[self.base]
-                self.bid = self.rbid * OANDA.PRICE[self.base]
-                up = self.rp * OANDA.PRICE[self.base]
-
-
-                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
-                self.p = up
-
-                a = str(round(self.ask))
-                b = str(round(self.bid))
-                l = str(round(self.p))
-
-                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l[:3] + ',' + l[3:] + '\t' +  a[:3] + ',' + a[3:] + '\t' +  b[:3] + ',' + b[3:])
-                sleep(Window.PERIOD)
-
-            except:
-                self.label.configure(fg = 'gray')
-                sleep(10)
-                self.label.configure(fg = 'black')
-                continue
-
-class USExchange(Thread):
-
-    def __init__(self, root, parent):
-        Thread.__init__(self)
-
-        if parent.name == 'Quoine USD':
-            Label(root).pack()
-
-        self.name = parent.name
-        self.parent = parent
-        self.str = StringVar()
-        self.str.set('')
-        self.label = Label(root, textvariable = self.str, font = (Window.FONT, Window.FSIZE))
-        self.label.pack()
-
-        self.p = 0
-        
-    def run(self):
-    
-        while True:
-            try:
-                self.ask = self.parent.rask
-                self.bid = self.parent.rbid
-                up = self.parent.rp
-
-                self.label.configure(fg = ('black' if self.p == up else ('red' if self.p > up else 'green')))
-                self.p = up
-
-                a = str(round(self.ask, 1))
-                b = str(round(self.bid, 1))
-                l = str(round(self.p, 1))
-
-                self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
-                sleep(Window.PERIOD)
-
-            except:
-                self.label.configure(fg = 'gray')
-                sleep(10)
-                self.label.configure(fg = 'black')
-                continue
-
-
 class XemExchange(Exchange):
 
-#    POLOXEMBTC = None
     TREXXEMBTC = 1
     ZAIFBTCJPY = 1
 
     ZXEM_ASK = 0
-#    PXEM_ASK = 0
     TXEM_ASK = 0
     ZXEM_BID = 0
-#    PXEM_BID = 0
     TXEM_BID = 0
 
     mjstr = None
     ztstr = None
-#    pstr = None
 
     def __init__(self, root, name, url, last, sask, sbid):    
 
-#        if name == 'Zaif MONA':
-#            Label(root).pack()
-
         Exchange.__init__(self, root, name, url, last, sask, sbid)
 
-        if name == 'Bittrex MONA':
+        if name == 'Bittrex MONA/JPY':
             XemExchange.mjstr = StringVar()
             XemExchange.mjstr.set('')
             XemExchange.mjlabel = Label(root, textvariable = XemExchange.mjstr, font = (Window.FONT, Window.FSIZE))
-            XemExchange.mjlabel.pack()
 
             XemExchange.ztstr = StringVar()
             XemExchange.ztstr.set('')
             XemExchange.ztlabel = Label(root, textvariable = XemExchange.ztstr, font = (Window.FONT, Window.FSIZE))
-            XemExchange.ztlabel.pack()
-
-#            self.txstr = StringVar()
-#            self.txstr.set('')
-#            self.txlabel = Label(root, textvariable = self.txstr, font = (Window.FONT, Window.FSIZE))
-#            self.txlabel.pack()
-
-#            XemExchange.pstr = StringVar()
-#            XemExchange.pstr.set('')
-#            XemExchange.plabel = Label(root, textvariable = XemExchange.pstr, font = (Window.FONT, Window.FSIZE))
-#            XemExchange.plabel.pack()
-
-#            self.tstr = StringVar()
-#            self.tstr.set('')
-#            self.tlabel = Label(root, textvariable = self.tstr, font = (Window.FONT, Window.FSIZE))
-#            self.tlabel.pack()
-
 
 
     def run(self):
@@ -367,7 +162,7 @@ class XemExchange(Exchange):
             try:
                 up = 0
 
-                if self.name == 'Zaif MONA':
+                if self.name == 'Zaif MONA/JPY':
                     data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
 
                     self.ask = float(data[self.sask])
@@ -376,17 +171,11 @@ class XemExchange(Exchange):
                     XemExchange.ZXEM_ASK = self.ask
                     XemExchange.ZXEM_BID = self.bid
 
-                elif self.name == 'Bittrex MONA':
+                elif self.name == 'Bittrex MONA/JPY':
                     data = load(urlopen(Request(self.url, headers = {'User-Agent':'Hoge Browser'})))
                     XemExchange.TREXXEMBTC = data['result']
 
-#                    self.ask = float(XemExchange.TREXXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
-#                    self.bid = float(XemExchange.TREXXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
-#                    up = float(XemExchange.TREXXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
-#                    XemExchange.TXEM_ASK = self.ask
-#                    XemExchange.TXEM_BID = self.bid
-
-                if self.name == 'Bittrex MONA' and XemExchange.ZAIFBTCJPY and XemExchange.TREXXEMBTC:
+                if self.name == 'Bittrex MONA/JPY' and XemExchange.ZAIFBTCJPY and XemExchange.TREXXEMBTC:
                     self.ask = float(XemExchange.TREXXEMBTC[self.sask]) * XemExchange.ZAIFBTCJPY
                     self.bid = float(XemExchange.TREXXEMBTC[self.sbid]) * XemExchange.ZAIFBTCJPY
                     up = float(XemExchange.TREXXEMBTC[self.last]) * XemExchange.ZAIFBTCJPY
@@ -400,31 +189,9 @@ class XemExchange(Exchange):
                 b = str(round(self.bid, 1))
                 l = str(round(self.p, 1))
 
-#                if len(a) < 7:
-#                    a = a + '0'*(7-len(a))
-#                if len(b) < 6:
-#                    b = b + '0'*(7-len(b))
-#                if len(l) < 6:
-#                    l = l + '0'*(7-len(l))
-
                 self.str.set(self.name + (' ' * (20 - len(self.name))) + '\t' + l + '\t' +  a + '\t' +  b)
 
-#                if self.name == 'Poloniex XEM' and 0 < XemExchange.PXEM_BID and 0 < XemExchange.PXEM_ASK:
-
-#                    if XemExchange.PXEM_ASK < XemExchange.ZXEM_BID:
-#                        v = round(100 * (XemExchange.ZXEM_BID / XemExchange.PXEM_ASK - 1), 4)
-                    
-#                    elif XemExchange.ZXEM_ASK < XemExchange.PXEM_BID:
-#                        v = round(100 * (XemExchange.ZXEM_ASK / XemExchange.PXEM_BID - 1), 4)
-
-#                    else:
-#                        v = 0
-
-#                    XemExchange.xstr.set('Zaif XEM / Poloniex XEM \t' + ('+' if 0 < v else '') + str(v) + ' %')
-#                    XemExchange.pstr.set('Poloniex XEM/BTC last \t' + XemExchange.POLOXEMBTC[self.last])
-#                    XemExchange.zstr.set('Zaif BTC/JPY last \t\t' + str(XemExchange.ZAIFBTCJPY))
-
-                if self.name == 'Bittrex MONA' and 0 < XemExchange.TXEM_BID and 0 < XemExchange.TXEM_ASK:
+                if self.name == 'Bittrex MONA/JPY' and 0 < XemExchange.TXEM_BID and 0 < XemExchange.TXEM_ASK:
 
                     if XemExchange.TXEM_ASK < XemExchange.ZXEM_BID:
                         v = round(100 * (XemExchange.ZXEM_BID / XemExchange.TXEM_ASK - 1), 4)
@@ -435,7 +202,10 @@ class XemExchange(Exchange):
                     else:
                         v = 0
 
-                    self.mjstr.set('Bittrex MONA/BTC last \t' + str(format(XemExchange.TREXXEMBTC[self.last], '.8f')))
+                    l = str(format(XemExchange.TREXXEMBTC[self.last], '.8f'))
+                    a = str(format(XemExchange.TREXXEMBTC[self.sask], '.8f'))
+                    b = str(format(XemExchange.TREXXEMBTC[self.sbid], '.8f'))
+                    self.mjstr.set('Bittrex MONA/BTC' + (' ' * (20 - len('Bittrex MONA/BTC'))) + '\t' + l + '\t' + a + '\t' + b)
                     self.ztstr.set('Zaif MONA / Bittrex MONA \t' + ('+' if 0 < v else '') + str(v) + ' %')
 
                 sleep(Window.PERIOD)
@@ -455,52 +225,20 @@ if __name__ == '__main__':
     window = Window('MONA Live Price')
 
     base = [ \
-#        Future(window.root, 'bF Future This Week', 'https://api.bitflyer.jp/v1/getticker?product_code=BTCJPY', 'ltp', 'best_ask', 'best_bid', 1), \
-#        Future(window.root, 'bF Future Next Week', 'https://api.bitflyer.jp/v1/getticker?product_code=BTCJPY', 'ltp', 'best_ask', 'best_bid', 2), \
-#        Exchange(window.root, 'bitFlyer FX', 'https://api.bitflyer.jp/v1/getticker?product_code=FX_BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
-#        Exchange(window.root, 'bitFlyer', 'https://api.bitflyer.jp/v1/getticker?product_code=BTC_JPY', 'ltp', 'best_ask', 'best_bid'), \
-#        Exchange(window.root, 'BtcBox', 'https://www.btcbox.co.jp/api/v1/ticker/', 'last', 'sell', 'buy'), \
-        Exchange(window.root, 'Zaif', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
-#        Exchange(window.root, 'coincheck', 'https://coincheck.com/api/ticker', 'last', 'ask', 'bid'), \
-#        Exchange(window.root, 'Quoine JPY', 'https://api.quoine.com/products/5', 'last_traded_price', 'market_ask', 'market_bid'), \
+        Exchange(window.root, 'Zaif BTC/JPY', 'https://api.zaif.jp/api/1/ticker/btc_jpy', 'last', 'ask', 'bid'), \
         ]
-
-    foreign = [ \
-#        ForExchange(window.root, 'Quoine USD', 'https://api.quoine.com/products/1', 'last_traded_price', 'market_ask', 'market_bid'), \
-#        ForExchange(window.root, 'Poloniex', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
-#        ForExchange(window.root, 'Kraken', 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD', 'c', 'a', 'b'), \
-#        ForExchange(window.root, 'Bitstamp', 'https://www.bitstamp.net/api/v2/ticker/btcusd/', 'last', 'ask', 'bid'), \
-#        ForExchange(window.root, 'Bitfinex', 'https://api.bitfinex.com/v1/pubticker/BTCUSD', 'last_price', 'ask', 'bid'), \
-#        ForExchange(window.root, 'GDAX', 'https://api.gdax.com/products/BTC-USD/ticker', 'price', 'ask', 'bid'), \
-#        ForExchange(window.root, 'coinbase', 'https://api.coinbase.com/v2/prices/BTC-USD/', 'spot', 'buy', 'sell'), \
-#        ForExchange(window.root, 'BTC-e', 'https://btc-e.com/api/3/ticker/btc_usd', 'last', 'buy', 'sell'), \
-#        ForExchange(window.root, 'OKCoinCOM', 'https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd', 'last', 'sell', 'buy'), \
-#        ForExchange(window.root, 'OKCoin this wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=this_week', 'last', 'sell', 'buy'), \
-#        ForExchange(window.root, 'OKCoin next wk', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=next_week', 'last', 'sell', 'buy'), \
-#        ForExchange(window.root, 'OKCoin quarter', 'https://www.okcoin.com/api/v1/future_ticker.do?symbol=btc_usd&contract_type=quarter', 'last', 'sell', 'buy'), \
-#        ForExchange(window.root, 'Houbi', 'http://api.huobi.com/staticmarket/ticker_btc_json.js', 'last', 'sell', 'buy'), \
-#        ForExchange(window.root, 'BTCC', 'https://pro-data.btcc.com/data/pro/ticker?symbol=XBTCNY', 'Last', 'AskPrice', 'BidPrice'), \
-#        ForExchange(window.root, 'OKCoinCN', 'https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_cny', 'last', 'sell', 'buy'), \
-        ]
-
-    us = [USExchange(window.root, e) for e in foreign] #この行の先頭の#を外すとBTCUSDとBTCCNY表示
-#    us = [] #この行の先頭の#を外すと BTCUSDとBTCCNY非表示
 
     xem = [ \
-        XemExchange(window.root, 'Zaif MONA', 'https://api.zaif.jp/api/1/ticker/mona_jpy', 'last', 'ask', 'bid'), \
-#        XemExchange(window.root, 'Poloniex XEM', 'https://poloniex.com/public?command=returnTicker', 'last', 'lowestAsk', 'highestBid'), \
-        XemExchange(window.root, 'Bittrex MONA', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-mona', 'Last', 'Ask', 'Bid'), \
+        XemExchange(window.root, 'Zaif MONA/JPY', 'https://api.zaif.jp/api/1/ticker/mona_jpy', 'last', 'ask', 'bid'), \
+        XemExchange(window.root, 'Bittrex MONA/JPY', 'https://bittrex.com/api/v1.1/public/getticker?market=btc-mona', 'Last', 'Ask', 'Bid'), \
         ] 
 
-    eth = [ \
-#        EthereumExchange(window.root, 'Bitfinex ETH', 'https://api.bitfinex.com/v1/pubticker/ETHUSD', 'last_price', 'ask', 'bid'), \
-#        EthereumExchange(window.root, 'BTC-e ETH', 'https://btc-e.com/api/3/ticker/eth_usd', 'last', 'buy', 'sell'), \
-        ] 
+    base.append(Exchange(window.root, 'Zaif MONA/BTC', 'https://api.zaif.jp/api/1/ticker/mona_btc', 'last', 'ask', 'bid'))
 
-#    oanda = [OANDA(window.root, currencyPair) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート表示
-    oanda = [OANDA(window.root, currencyPair, False) for currencyPair in OANDA.PRICE.keys()] #この行の先頭の#を外すと為替レート非表示
+    XemExchange.mjlabel.pack()
+    XemExchange.ztlabel.pack()
 
-    exchangeList = tuple([window] + base + foreign + us + xem + eth + oanda)
+    exchangeList = tuple([window] + base + xem)
 
     for e in exchangeList:
         e.setDaemon(True)
