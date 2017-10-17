@@ -150,7 +150,7 @@ if __name__ == '__main__':
                 continue
                     
         elif (len(positions) == 1) and (len(openOrders) == 1):
-            if positions[0]['side'] == openOrders[0]['side']:
+            if 10 < abs(Close_Diff - abs(positions[0]['price'] - openOrders[0]['price'])):
             
                 while openOrders:
                     ca()
